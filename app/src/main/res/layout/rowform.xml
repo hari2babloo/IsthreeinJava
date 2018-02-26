@@ -42,24 +42,25 @@
                 android:layout_weight="1"
                 android:text="TextView" />
 
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
             <ImageButton
                 android:id="@+id/plus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/ic_input_add" />
 
-            <ImageButton
-                android:id="@+id/minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:drawable/ic_delete" />
 
             <ImageButton
                 android:id="@+id/del"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-
                 card_view:srcCompat="@android:drawable/ic_menu_delete" />
 
         </LinearLayout>

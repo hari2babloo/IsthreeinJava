@@ -1,3 +1,4 @@
+//office
 package com.example.hari.isthreeinjava;
 
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class Puckup extends AppCompatActivity {
 
@@ -57,7 +61,9 @@ public class Puckup extends AppCompatActivity {
      String mMessage;
     DataFish data = new DataFish();
 //    DataFish2 data2 = new DataFish2();
-String s,t,u;
+    String price,type,quantity,amount;
+    TextView btmamt,btmtotal;
+    TableLayout tableLayout;
     final ArrayList<String> dd = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,10 @@ String s,t,u;
         setContentView(R.layout.puckup);
         mRVFishPrice = (RecyclerView)findViewById(R.id.fishPriceList);
         mRVFishPrice2 = (RecyclerView)findViewById(R.id.fishPriceList2);
+        btmamt = (TextView)findViewById(R.id.btmamt);
+        tableLayout = (TableLayout)findViewById(R.id.tabl);
+        tableLayout.setVisibility(View.GONE);
+        btmtotal = (TextView)findViewById(R.id.btmtotal);
         GetFormData();
     }
 
@@ -165,13 +175,15 @@ String s,t,u;
         public String item;
         public String noofpieces;
         public String cost;
+        public String amt;
 
 
-        public DataFish2(String item,String noofpieces,String cost){
+        public DataFish2(String item,String noofpieces,String cost,String amt){
 
             this.item = item;
             this.noofpieces = noofpieces;
             this.cost = cost;
+            this.amt = amt;
         }
 
     }
@@ -224,8 +236,8 @@ String s,t,u;
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    u = myHolder.qty.getText().toString();
-                    Toast.makeText(context, u, Toast.LENGTH_SHORT).show();
+                    quantity = myHolder.qty.getText().toString();
+                    Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -237,9 +249,9 @@ String s,t,u;
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Object item = parent.getItemAtPosition(position);
-                    s = tarif.get(position).getPrice();
-                    t = tarif.get(position).getType();
-                    Toast.makeText(context,s, Toast.LENGTH_SHORT).show();
+                    price = tarif.get(position).getPrice();
+                    type = tarif.get(position).getType();
+                    Toast.makeText(context,price, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -250,7 +262,22 @@ String s,t,u;
             myHolder.plus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddtoList();
+
+
+                    if (TextUtils.isEmpty(quantity)){
+                        Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
+                        //myHolder.qty.setError("empty");
+
+
+                    }
+
+else
+                    {
+                        AddtoList();
+                        tableLayout.setVisibility(View.VISIBLE);
+
+                    }
+
                 }
             });
 
@@ -281,24 +308,31 @@ String s,t,u;
         }
 
     }
-
     private void AddtoList() {
-                    Log.e(u,u);
-                     Float foo = Float.parseFloat(u);
-                    Float fo2 = Float.parseFloat(s);
+                   // Log.e(u,u);
+                    Float foo = Float.parseFloat(quantity);
+                    Float fo2 = Float.parseFloat(price);
                     Float x = foo * fo2;
-        String suu =Float.toString(x);
-
-        filterdata2.add(new DataFish2(s,t,suu));
+                    amount =Float.toString(x);
+        filterdata2.add(new DataFish2(type,quantity,price,amount));
 
         Log.e("Arraydata",filterdata2.toString());
-        // Add the new row before the add field button.
-
         Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
         Adapter2.setHasStableIds(false);
         mRVFishPrice2.setAdapter(Adapter2);
         mRVFishPrice2.setHasFixedSize(false);
-        mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,true));
+        mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,false));
+        float sum = 0;
+        for (int i = 0; i < filterdata2.size(); i++) {
+
+            Float dd = Float.parseFloat(filterdata2.get(i).amt);
+            sum += dd;
+        }
+        Log.e("rererer", String.valueOf(sum));
+        btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+        double s =  ((18.0/100) *sum)+sum;
+        btmtotal.setText("Total = " +String.valueOf(s));
 
     }
 
@@ -313,14 +347,10 @@ String s,t,u;
             inflater = LayoutInflater.from(context);
             this.data2 = data5;
         }
-
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.rowform, parent, false);
-
             final MyHolder holder = new MyHolder(view);
-
-
             return holder;
         }
 
@@ -340,6 +370,31 @@ String s,t,u;
             myHolder.item.setText(current.item);
             myHolder.noofpices.setText(current.noofpieces);
             myHolder.cost.setText(current.cost);
+            myHolder.amount.setText(current.amt);
+            myHolder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
+
+                    filterdata2.remove(position);
+                    Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
+                    Adapter2.setHasStableIds(false);
+                    mRVFishPrice2.setAdapter(Adapter2);
+                    mRVFishPrice2.setHasFixedSize(false);
+                    mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,false));
+                    float sum = 0;
+                    for (int i = 0; i < filterdata2.size(); i++) {
+
+                        Float dd = Float.parseFloat(filterdata2.get(i).amt);
+                        sum += dd;
+                    }
+                    Log.e("rererer", String.valueOf(sum));
+                    btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+                    double s =  ((18.0/100) *sum)+sum;
+                    btmtotal.setText("Total = " +String.valueOf(s));
+                }
+            });
             myHolder.plus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -357,18 +412,30 @@ String s,t,u;
                                     String YouEditTextValue = edittext.getText().toString();
                                     Toast.makeText(context, YouEditTextValue, Toast.LENGTH_SHORT).show();
                                     Float foo = Float.parseFloat(YouEditTextValue);
-                                    Float fo2 = Float.parseFloat(s);
+                                    Float fo2 = Float.parseFloat(current.cost);
                                     Float x = foo * fo2;
                                     String suu =Float.toString(x);
-                                    filterdata2.set(position, new DataFish2(current.cost,current.noofpieces,suu));
+                                    filterdata2.set(position, new DataFish2(current.item,YouEditTextValue,current.cost,suu));
                                     Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
                                     Adapter2.setHasStableIds(false);
                                     mRVFishPrice2.setAdapter(Adapter2);
                                     mRVFishPrice2.setHasFixedSize(false);
-                                    mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,true));
+                                    mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,false));
+                                    float sum = 0;
+                                    for (int i = 0; i < filterdata2.size(); i++) {
+
+                                        Float dd = Float.parseFloat(filterdata2.get(i).amt);
+                                        sum += dd;
+                                    }
+
+                                    btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+                                    double s =  ((18.0/100) *sum)+sum;
+                                    btmtotal.setText("Total = " +String.valueOf(s));
+                                    Log.e("rererer", String.valueOf(s));
+
                                 }
                             });
-
                     builder.show();
                    // filterdata2.set(position, new DataFish2(current.item,"XX","XYZ"));
 
@@ -389,6 +456,7 @@ String s,t,u;
            TextView item;
             TextView noofpices;
             TextView cost;
+            TextView amount;
             ImageButton plus;
             ImageButton minus;
             ImageButton delete;
@@ -399,6 +467,7 @@ String s,t,u;
                 item = (TextView)itemView.findViewById(R.id.item);
                 noofpices = (TextView)itemView.findViewById(R.id.noofpices);
                 cost = (TextView)itemView.findViewById(R.id.cost);
+                amount = (TextView)itemView.findViewById(R.id.total);
                 plus = (ImageButton)itemView.findViewById(R.id.plus);
                 minus = (ImageButton)itemView.findViewById(R.id.minus);
                 delete = (ImageButton)itemView.findViewById(R.id.del);
