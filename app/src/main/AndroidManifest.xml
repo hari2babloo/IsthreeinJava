@@ -22,13 +22,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".Dashpage" />
         <activity android:name=".Signin" />
         <activity android:name=".Signup" />
         <activity android:name=".VerifyEmail"></activity>
         <activity android:name=".OtpValidation" />
-        <activity android:name=".SchedulePickup"></activity>
+        <activity android:name=".SchedulePickup">
+
+        </activity>
     </application>
 
 </manifest>

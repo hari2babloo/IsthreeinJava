@@ -91,7 +91,7 @@ public class Dashpage extends AppCompatActivity {
 
                                 if (s.equalsIgnoreCase("0")){
 
-                                    Intent intent = new Intent(Dashpage.this,Signin.class);
+                                    Intent intent = new Intent(Dashpage.this,SchedulePickup.class);
                                     startActivity(intent);
                                 }
 
