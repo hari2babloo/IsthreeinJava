@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Signin">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:srcCompat="@drawable/logo" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/userid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Email"
+        app:met_baseColor="#0056d3"
+        app:met_errorColor="#ddaa00"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/bluee" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:met_baseColor="#0056d3"
+        app:met_errorColor="#ddaa00"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/bluee" />
+
+    <Button
+        android:id="@+id/signin"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@color/bluee"
+        android:text="Signin"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/forgotpass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="Forgot Password/Reset Password"
+        android:textColor="#1A2D52"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/signuptext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Dont Have an Account?? Signup"
+        android:textColor="#1A2D52"
+        android:textSize="20sp" />
+
+
+</LinearLayout>

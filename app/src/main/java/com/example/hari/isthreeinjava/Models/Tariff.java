@@ -12,7 +12,7 @@ public class Tariff {
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("Type")
+    @SerializedName("category")
     @Expose
     private String type;
     @SerializedName("price")

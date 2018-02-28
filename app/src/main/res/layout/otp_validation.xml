@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".OtpValidation">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:srcCompat="@drawable/logo" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/otp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter OTP"
+        app:met_baseColor="#0056d3"
+        app:met_errorColor="#ddaa00"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/bluee" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter New Password"
+        android:inputType="textPassword"
+        app:met_baseColor="#0056d3"
+        app:met_errorColor="#ddaa00"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/bluee" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/cnfpass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        app:met_baseColor="#0056d3"
+        app:met_errorColor="#ddaa00"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/bluee" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@color/bluee"
+        android:text="submit"
+        android:textColor="@android:color/white" />
+
+
+</LinearLayout>
