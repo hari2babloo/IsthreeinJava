@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
+    android:background="@color/cardview_light_background"
     android:gravity="top|center"
     android:orientation="vertical"
     tools:context=".MainActivity">
@@ -29,7 +30,7 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <Spinner
                 android:id="@+id/farelist"

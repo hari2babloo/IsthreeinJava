@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         pd = new ProgressDialog(MainActivity.this);
-        pd.setMessage("Getting Game Information");
+        pd.setMessage("Getting Details");
         pd.setCancelable(false);
         pd.show();
         final OkHttpClient client = new OkHttpClient();

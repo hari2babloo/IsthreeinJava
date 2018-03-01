@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.hari.isthreeinjava"
+        applicationId "com.a3x3conect.mobile.isthreeinjava"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1

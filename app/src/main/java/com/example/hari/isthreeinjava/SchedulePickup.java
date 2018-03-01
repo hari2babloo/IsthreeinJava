@@ -1,6 +1,7 @@
 package com.example.hari.isthreeinjava;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,12 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.hari.isthreeinjava.Models.Sigin;
 import com.example.hari.isthreeinjava.Models.Tariff;
+import com.example.hari.isthreeinjava.Models.TinyDB;
 import com.example.hari.isthreeinjava.Models.Userprofile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -46,6 +49,7 @@ public class SchedulePickup extends AppCompatActivity {
             MediaType.parse("application/json");
     String mMessage,custid;
     List<Userprofile> userprofiles;
+    TinyDB tinyDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +77,7 @@ public class SchedulePickup extends AppCompatActivity {
         selecteddate.setVisibility(View.GONE);
         myCalendar = Calendar.getInstance();
 
-
+tinyDB = new TinyDB(this);
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -99,7 +103,9 @@ public class SchedulePickup extends AppCompatActivity {
         changeadress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SchedulePickup.this, "ll be updated Soon", Toast.LENGTH_SHORT).show();
+
+                Intent  intent = new Intent(SchedulePickup.this,ChangeAddress.class);
+                startActivity(intent);
             }
         });
         confirmpickup.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +122,7 @@ public class SchedulePickup extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Log.e("selectdate",sdf.format( myCalendar.getTime()));
         selecteddate.setVisibility(View.VISIBLE);
+        changeadress.setVisibility(View.VISIBLE);
         selecteddate.setText("Selected Date:" +sdf.format(myCalendar.getTime()));
         getaddress();
 
@@ -126,8 +133,7 @@ public class SchedulePickup extends AppCompatActivity {
         final OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject postdat = new JSONObject();
         try {
-            postdat.put("email", "test@test.com");
-            postdat.put("phoneNo", "8074219509");
+            postdat.put("customerId",tinyDB.getString("custid"));
 
         } catch(JSONException e){
             // TODO Auto-generated catch block
@@ -135,7 +141,7 @@ public class SchedulePickup extends AppCompatActivity {
         }
         RequestBody body = RequestBody.create(MEDIA_TYPE,postdat.toString());
         final Request request = new Request.Builder()
-                .url("http://52.172.191.222/isthree/index.php/services/getUserProfile")
+                .url("http://52.172.191.222/isthree/index.php/services/getUserInfo")
                 .post(body)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -200,7 +206,6 @@ public class SchedulePickup extends AppCompatActivity {
 
             String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
             String timeStamp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-
             postdat.put("customerId", custid);
             postdat.put("status", "PICKUP-REQUESTED");
             postdat.put("jobid", timeStamp);
@@ -241,9 +246,31 @@ public class SchedulePickup extends AppCompatActivity {
 
                                     jsonResponse.getString("status");
                                     jsonResponse.getString("statusCode");
-                                    Toast.makeText(SchedulePickup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                    Intent intent = new Intent(SchedulePickup.this,Dashpage.class);
-//                                    startActivity(intent);
+
+
+
+                                    final Dialog openDialog = new Dialog(SchedulePickup.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("Schedule");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(jsonResponse.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                    dialogno.setVisibility(View.GONE);
+
+                                    dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
+                                            Intent intent = new Intent(SchedulePickup.this,Dashpage.class);
+                                            startActivity(intent);
+                                        }
+                                    });
+
+                                    openDialog.show();
+           //                         Toast.makeText(SchedulePickup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+
                                     Log.e("json",sss);
                                 }
 

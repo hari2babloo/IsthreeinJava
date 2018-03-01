@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     tools:context="com.example.hari.isthreeinjava.Signup">
 
     <LinearLayout
@@ -48,11 +49,11 @@
             android:layout_height="wrap_content"
             android:hint="Phone number"
 
-            app:met_maxCharacters="10"
             android:inputType="number"
             app:met_baseColor="#0056d3"
             app:met_errorColor="@color/red"
             app:met_floatingLabel="highlight"
+            app:met_maxCharacters="10"
             app:met_primaryColor="@color/bluee" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -61,11 +62,11 @@
             android:layout_height="wrap_content"
             android:hint="Alternate Phone Number"
 
-            app:met_maxCharacters="10"
             android:inputType="number"
             app:met_baseColor="#0056d3"
             app:met_errorColor="@color/red"
             app:met_floatingLabel="highlight"
+            app:met_maxCharacters="10"
             app:met_primaryColor="@color/bluee" />
 
         <com.rengwuxian.materialedittext.MaterialEditText

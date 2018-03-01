@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-        <activity android:name=".Puckup" />
+        <activity android:name=".Puckup"></activity>
         <activity android:name=".Main2Activity" />
         <activity
             android:name=".Splashscreen"
@@ -22,16 +22,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".Dashpage" />
-        <activity android:name=".Signin" />
-        <activity android:name=".Signup" />
-        <activity android:name=".VerifyEmail"></activity>
-        <activity android:name=".OtpValidation" />
-        <activity android:name=".SchedulePickup">
+        <activity android:name=".Signin">
 
         </activity>
+        <activity android:name=".Signup" />
+        <activity android:name=".VerifyEmail" />
+        <activity android:name=".OtpValidation" />
+        <activity android:name=".SchedulePickup"></activity>
+        <activity android:name=".ChangeAddress"></activity>
     </application>
 
 </manifest>

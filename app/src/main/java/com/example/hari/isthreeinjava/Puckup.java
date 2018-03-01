@@ -1,14 +1,17 @@
 //office
 package com.example.hari.isthreeinjava;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,15 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hari.isthreeinjava.Models.Sigin;
 import com.example.hari.isthreeinjava.Models.Tariff;
+import com.example.hari.isthreeinjava.Models.TinyDB;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.Callback;
@@ -41,7 +48,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -51,6 +60,8 @@ public class Puckup extends AppCompatActivity {
 
     public static final MediaType MEDIA_TYPE =
             MediaType.parse("application/json");
+
+    JSONArray jsonArray;
     ListView plist;
      List<Tariff> tarif;
     RecyclerView mRVFishPrice,mRVFishPrice2;
@@ -59,6 +70,10 @@ public class Puckup extends AppCompatActivity {
     List<DataFish> filterdata=new ArrayList<DataFish>();
     List<DataFish2> filterdata2=new ArrayList<DataFish2>();
      String mMessage;
+     Button pay;
+     TinyDB tinyDB;
+    double s;
+
     DataFish data = new DataFish();
 //    DataFish2 data2 = new DataFish2();
     String price,type,quantity,amount;
@@ -69,12 +84,23 @@ public class Puckup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.puckup);
+        tinyDB = new TinyDB(this);
+        pay = (Button)findViewById(R.id.pay);
         mRVFishPrice = (RecyclerView)findViewById(R.id.fishPriceList);
         mRVFishPrice2 = (RecyclerView)findViewById(R.id.fishPriceList2);
         btmamt = (TextView)findViewById(R.id.btmamt);
         tableLayout = (TableLayout)findViewById(R.id.tabl);
         tableLayout.setVisibility(View.GONE);
         btmtotal = (TextView)findViewById(R.id.btmtotal);
+        pay.setVisibility(View.GONE);
+
+        pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Paydata();
+            }
+        });
+
         GetFormData();
     }
 
@@ -202,9 +228,7 @@ public class Puckup extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.row, parent, false);
-
             final MyHolder holder = new MyHolder(view);
-
 
             return holder;
         }
@@ -267,13 +291,18 @@ public class Puckup extends AppCompatActivity {
                     if (TextUtils.isEmpty(quantity)){
                         Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
                         //myHolder.qty.setError("empty");
+                    }
 
+                    else if (quantity.equalsIgnoreCase("0")){
+                        Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
 
                     }
 
-else
+                    else
                     {
                         AddtoList();
+                        myHolder.qty.setText("");
+
                         tableLayout.setVisibility(View.VISIBLE);
 
                     }
@@ -315,8 +344,6 @@ else
                     Float x = foo * fo2;
                     amount =Float.toString(x);
         filterdata2.add(new DataFish2(type,quantity,price,amount));
-
-        Log.e("Arraydata",filterdata2.toString());
         Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
         Adapter2.setHasStableIds(false);
         mRVFishPrice2.setAdapter(Adapter2);
@@ -333,6 +360,10 @@ else
 
         double s =  ((18.0/100) *sum)+sum;
         btmtotal.setText("Total = " +String.valueOf(s));
+
+        pay.setVisibility(View.VISIBLE);
+
+
 
     }
 
@@ -391,7 +422,7 @@ else
                     Log.e("rererer", String.valueOf(sum));
                     btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                    double s =  ((18.0/100) *sum)+sum;
+                     s =  ((18.0/100) *sum)+sum;
                     btmtotal.setText("Total = " +String.valueOf(s));
                 }
             });
@@ -410,6 +441,7 @@ else
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String YouEditTextValue = edittext.getText().toString();
+                                    edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
                                     Toast.makeText(context, YouEditTextValue, Toast.LENGTH_SHORT).show();
                                     Float foo = Float.parseFloat(YouEditTextValue);
                                     Float fo2 = Float.parseFloat(current.cost);
@@ -477,6 +509,171 @@ else
 
         }
 
+
+
+    }
+
+    private void Paydata() {
+
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject postdat = new JSONObject();
+
+
+        JSONArray itemType = new JSONArray();
+        JSONArray unitPrice = new JSONArray();
+        JSONArray subTotal = new JSONArray();
+        JSONArray quantity = new JSONArray();
+
+        for (int i=0;i<filterdata2.size();i++){
+
+            itemType.put(filterdata2.get(i).item);
+        }
+        for (int i=0;i<filterdata2.size();i++){
+
+            unitPrice.put(filterdata2.get(i).cost);
+        }
+        for (int i=0;i<filterdata2.size();i++){
+
+            subTotal.put(filterdata2.get(i).amt);
+        }
+        for (int i=0;i<filterdata2.size();i++){
+
+            quantity.put(filterdata2.get(i).noofpieces);
+        }
+
+        String timeStamp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
+        try {
+            postdat.put("status", "PICKUP-CONFIRMED");
+            postdat.put("gstPercentage", "18%");
+            postdat.put("customerId",tinyDB.getString("custid"));
+            postdat.put("grandTotal",String.valueOf(s));
+            postdat.put("invoiceDateTime",timeStamp2);
+            postdat.put("jobid",tinyDB.getString("jobid"));
+            postdat.put("itemType",itemType);
+            postdat.put("unitPrice",unitPrice);
+            postdat.put("subTotal",subTotal);
+            postdat.put("quantity",quantity);
+
+        } catch(JSONException e){
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MEDIA_TYPE,postdat.toString());
+
+        Log.e("array", String.valueOf(postdat));
+        final Request request = new Request.Builder()
+                .url("http://52.172.191.222/isthree/index.php/services/deliveryInvoice")
+                .post(body)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                String mMessage = e.getMessage().toString();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+                mMessage = response.body().string();
+                if (response.isSuccessful()){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            JSONObject jsonResponse = null;
+                            try {
+
+                                JSONArray itemArray = new JSONArray(mMessage);
+                                for (int i = 0; i < itemArray.length(); i++) {
+                                    // int value=itemArray.getInt(i);
+                                    String sss = itemArray.getString(i);
+                                    jsonResponse = new JSONObject(sss);
+
+                                    jsonResponse.getString("status");
+                                    jsonResponse.getString("statusCode");
+
+                                    if (jsonResponse.getString("statusCode").equalsIgnoreCase("0")){
+
+                                        final Dialog openDialog = new Dialog(Puckup.this);
+                                        openDialog.setContentView(R.layout.alert);
+                                        openDialog.setTitle("Error");
+                                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                        dialogTextContent.setText(jsonResponse.getString("status"));
+                                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                        dialogno.setVisibility(View.GONE);
+
+                                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                                            }
+                                        });
+
+                                        openDialog.show();
+                                    }
+
+                                    else if (jsonResponse.getString("statusCode").equalsIgnoreCase("1")){
+
+
+
+                                        final Dialog openDialog = new Dialog(Puckup.this);
+                                        openDialog.setContentView(R.layout.alert);
+                                        openDialog.setTitle("Success");
+                                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                        dialogTextContent.setText(jsonResponse.getString("status"));
+                                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                        dialogno.setVisibility(View.GONE);
+
+                                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                openDialog.dismiss();
+
+                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                        //
+                                        Log.e("json",sss);
+
+                                        openDialog.show();
+                                    }
+
+
+
+                                }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+
+
+
+
+                        }
+                    });
+                }
+                else runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+        });
 
 
     }

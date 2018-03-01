@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="30dp"
+    android:background="@color/cardview_light_background"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".OtpValidation">
@@ -55,6 +56,13 @@
         android:background="@color/bluee"
         android:text="submit"
         android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OTP will be sent to your Registered Mobile Number"
+        android:textColor="@color/bluee" />
 
 
 </LinearLayout>
