@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +51,7 @@ public class SchedulePickup extends AppCompatActivity {
     String mMessage,custid;
     List<Userprofile> userprofiles;
     TinyDB tinyDB;
+    View v1,v2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +67,12 @@ public class SchedulePickup extends AppCompatActivity {
         pin = (TextView)findViewById(R.id.pin);
         phone = (TextView)findViewById(R.id.phone);
         textView5 = (TextView)findViewById(R.id.textView5);
+        v1 = (View)findViewById(R.id.v1);
+        v2 = (View)findViewById(R.id.v2);
+
+        v1.setVisibility(View.GONE);
+
+        v2.setVisibility(View.GONE);
         changeadress.setVisibility(View.GONE);
         confirmpickup.setVisibility(View.GONE);
         adress.setVisibility(View.GONE);
@@ -81,6 +89,9 @@ tinyDB = new TinyDB(this);
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
+
+
+
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
@@ -88,6 +99,13 @@ tinyDB = new TinyDB(this);
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+
+
+
+
+
+
                 updateLabel();
             }
 
@@ -95,9 +113,15 @@ tinyDB = new TinyDB(this);
         datebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 new DatePickerDialog(SchedulePickup.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+
+
             }
         });
         changeadress.setOnClickListener(new View.OnClickListener() {
@@ -121,10 +145,55 @@ tinyDB = new TinyDB(this);
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Log.e("selectdate",sdf.format( myCalendar.getTime()));
-        selecteddate.setVisibility(View.VISIBLE);
-        changeadress.setVisibility(View.VISIBLE);
-        selecteddate.setText("Selected Date:" +sdf.format(myCalendar.getTime()));
-        getaddress();
+
+        String timeStamp = new SimpleDateFormat("MM/dd/yy").format(Calendar.getInstance().getTime());
+
+
+        try {
+            Date now = sdf.parse(timeStamp);
+            Date selected = sdf.parse(sdf.format(myCalendar.getTime()));
+            if(selected.after(now)){
+                System.out.println("Correct");
+                selecteddate.setVisibility(View.VISIBLE);
+                changeadress.setVisibility(View.VISIBLE);
+
+                v1.setVisibility(View.VISIBLE);
+
+                v2.setVisibility(View.VISIBLE);
+
+                datebtn.setText(sdf.format(myCalendar.getTime()));
+                //  selecteddate.setText("Selected Date:" +sdf.format(myCalendar.getTime()));
+                selecteddate.setVisibility(View.GONE);
+                getaddress();
+            }
+            // before() will return true if and only if date1 is before date2
+            if(selected.before(now)){
+                System.out.println("please select correct date");
+                Toast.makeText(this, "You Cannot Select previous day", Toast.LENGTH_SHORT).show();
+            }
+
+            //equals() returns true if both the dates are equal
+            if(selected.equals(now)){
+
+                selecteddate.setVisibility(View.VISIBLE);
+                changeadress.setVisibility(View.VISIBLE);
+
+                v1.setVisibility(View.VISIBLE);
+
+                v2.setVisibility(View.VISIBLE);
+
+                datebtn.setText(sdf.format(myCalendar.getTime()));
+                //  selecteddate.setText("Selected Date:" +sdf.format(myCalendar.getTime()));
+                selecteddate.setVisibility(View.GONE);
+                getaddress();
+//                Toast.makeText(this, "Schedule not possible today", Toast.LENGTH_SHORT).show();
+                System.out.println("You cannot select today's day");
+            }
+
+         } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -148,6 +217,39 @@ tinyDB = new TinyDB(this);
             @Override
             public void onFailure(Request request, IOException e) {
                 String mmessage = e.getMessage().toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(SchedulePickup.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
             }
 
             @Override
@@ -224,6 +326,39 @@ tinyDB = new TinyDB(this);
             @Override
             public void onFailure(Request request, IOException e) {
                 String mmessage = e.getMessage().toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(SchedulePickup.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
             }
 
             @Override

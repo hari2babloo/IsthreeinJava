@@ -1,7 +1,9 @@
 package com.example.hari.isthreeinjava;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +42,7 @@ public class Signin extends AppCompatActivity {
     String mMessage;
     List<Sigin> modelsignin;
     TinyDB tinyDB;
+    ProgressDialog pd;
     public static final MediaType MEDIA_TYPE =
             MediaType.parse("application/json");
     @Override
@@ -78,6 +81,10 @@ public class Signin extends AppCompatActivity {
     }
 
     private void Validate() {
+        pd = new ProgressDialog(Signin.this);
+        pd.setMessage("Signing in..");
+        pd.setCancelable(false);
+        pd.show();
 
         final OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject postdat = new JSONObject();
@@ -97,12 +104,54 @@ public class Signin extends AppCompatActivity {
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
+
+                pd.cancel();
+                pd.dismiss();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Signin.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
+
+
                 String mMessage = e.getMessage().toString();
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
 
+
+                pd.cancel();
+                pd.dismiss();
                 mMessage = response.body().string();
                 if (response.isSuccessful()){
                     runOnUiThread(new Runnable() {
@@ -141,7 +190,36 @@ public class Signin extends AppCompatActivity {
 
           if (status.equals(0)){
 
-              Toast.makeText(this, "Please Enter Valid Credentials", Toast.LENGTH_SHORT).show();
+              final Dialog openDialog = new Dialog(Signin.this);
+              openDialog.setContentView(R.layout.alert);
+              openDialog.setTitle("Account Created");
+              TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+              dialogTextContent.setText("Please Enter Valid Credentials");
+              ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+              dialogImage.setBackgroundResource(R.drawable.failure);
+              dialogImage.setBackgroundDrawable(getApplicationContext().getResources().getDrawable(R.drawable.failure));
+//              dialogImage.setBackground(this.getDrawable(ContextCompat.R.drawable.failure));
+              Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+              dialogCloseButton.setVisibility(View.GONE);
+              Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+              dialogno.setText("OK");
+
+
+              dialogno.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                  }
+              });
+
+
+
+              openDialog.show();
 
 
           }

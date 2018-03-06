@@ -1,56 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_weight="100"
     android:background="@color/cardview_light_background"
-    android:gravity="center_horizontal|center"
     android:orientation="vertical"
     tools:context=".Dashpage">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="20dp"
-        app:srcCompat="@drawable/logo" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/bluee" />
-
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/pickup"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/p" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_weight="0"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="1dp"
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@drawable/logo" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#FFDADADA" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bluee" />
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/placeorder"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/d"
-            android:text="Place Order" />
+            <ImageButton
+                android:id="@+id/pickup"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@drawable/pickup" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#FFDADADA" />
+
+            <ImageButton
+                android:id="@+id/placeorder"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@drawable/placeordr" />
 
 
+        </LinearLayout>
     </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/bluee" />
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

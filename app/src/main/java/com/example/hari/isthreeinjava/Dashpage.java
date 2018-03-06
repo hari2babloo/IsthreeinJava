@@ -95,6 +95,39 @@ public class Dashpage extends AppCompatActivity {
             @Override
             public void onFailure(Request request, IOException e) {
                 String mMessage = e.getMessage().toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Dashpage.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
             }
 
             @Override
@@ -154,10 +187,13 @@ public class Dashpage extends AppCompatActivity {
                                     openDialog.setContentView(R.layout.alert);
                                     openDialog.setTitle("Alert");
                                     TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                                    dialogTextContent.setText("Please place the Order only after the Arrival of the Delivery Person");
+                                    dialogTextContent.setText("Please place the Order only after the Arrival of the Delivery Agent");
                                     ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
                                     Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
                                     Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                                    dialogCloseButton.setText("YES,Agent Arrived");
+                                    dialogno.setText("NO");
 
                                     dialogno.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -177,7 +213,7 @@ public class Dashpage extends AppCompatActivity {
                                     });
                                     openDialog.show();
 
-                                    Toast.makeText(Dashpage.this, "Job ID Already Exists", Toast.LENGTH_SHORT).show();
+  //                                  Toast.makeText(Dashpage.this, "Job ID Already Exists", Toast.LENGTH_SHORT).show();
 
                                 }
                                 Log.e("s",s);
@@ -221,6 +257,39 @@ public class Dashpage extends AppCompatActivity {
             @Override
             public void onFailure(Request request, IOException e) {
                 String mMessage = e.getMessage().toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Dashpage.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
             }
 
             @Override
@@ -325,5 +394,8 @@ public class Dashpage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 }

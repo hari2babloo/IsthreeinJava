@@ -20,15 +20,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Address"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="14sp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/door"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Door No/Street"
-            app:met_baseColor="#0056d3"
+            android:hint="Door No/Street*"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -37,8 +37,9 @@
             android:id="@+id/land"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="LandMark"
-            app:met_baseColor="#0056d3"
+            android:hint="LandMark*"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -47,8 +48,9 @@
             android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="City"
-            app:met_baseColor="#0056d3"
+            android:hint="City*"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -57,9 +59,10 @@
             android:id="@+id/pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Pincode"
+            android:hint="Pincode*"
             android:inputType="number"
-            app:met_baseColor="#0056d3"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -70,7 +73,7 @@
             android:layout_height="wrap_content"
             android:background="@color/bluee"
             android:gravity="center"
-            android:text="Changeaddress"
+            android:text="Change address"
             android:textColor="@color/cardview_light_background" />
 
 

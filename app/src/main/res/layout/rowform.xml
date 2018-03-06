@@ -24,7 +24,7 @@
 
             <TextView
                 android:id="@+id/item"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/noofpices"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/cost"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
@@ -48,18 +48,21 @@
 
             <TextView
                 android:id="@+id/total"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:text="TextView" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/plus"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/edit" />
+                android:background="@color/bluee"
+                android:text="update"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="8sp" />
 
 
             <ImageButton
@@ -67,7 +70,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/delete" />
+                android:background="@drawable/deletee" />
 
         </LinearLayout>
 

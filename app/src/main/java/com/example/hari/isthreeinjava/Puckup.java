@@ -117,6 +117,39 @@ public class Puckup extends AppCompatActivity {
             @Override
             public void onFailure(Request request, IOException e) {
                 String mmessage = e.getMessage().toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Puckup.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
             }
 
             @Override
@@ -127,7 +160,20 @@ public class Puckup extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                           Displaylist();
+
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<Tariff>>(){}.getType();
+                            tarif = (List<Tariff>)  gson.fromJson(mMessage,listType);
+
+                            for(int j = 0; j < tarif.size(); j++){
+                                tarif.get(j).getType();
+                                dd.add(tarif.get(j).getType());
+
+
+                                Log.e("Dta",dd.toString());
+                            }
+
+                            Displaylist();
 
                         }
                     });
@@ -147,15 +193,6 @@ public class Puckup extends AppCompatActivity {
 
     private void Displaylist() {
 
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<Tariff>>(){}.getType();
-       tarif = (List<Tariff>)  gson.fromJson(mMessage,listType);
-
-        for(int j = 0; j < tarif.size(); j++){
-            tarif.get(j).getType();
-            dd.add(tarif.get(j).getType());
-            Log.e("Dta",dd.toString());
-        }
 
         try {
             JSONArray jsonArray = new JSONArray(mMessage);
@@ -175,6 +212,8 @@ public class Puckup extends AppCompatActivity {
             }
             data.spinlist = (dd);
             filterdata.add(data);
+
+
             Adapter = new AdapterFish(Puckup.this, filterdata);
             Adapter.setHasStableIds(false);
             mRVFishPrice.setAdapter(Adapter);
@@ -218,18 +257,20 @@ public class Puckup extends AppCompatActivity {
         int currentPos = 0;
         private Context context;
         private LayoutInflater inflater;
+
         // create constructor to innitilize context and data sent from MainActivity
         public AdapterFish(Context context, List<DataFish> data) {
             this.context = context;
             inflater = LayoutInflater.from(context);
             this.data = data;
+
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.row, parent, false);
             final MyHolder holder = new MyHolder(view);
-
+         //   Adapter.notifyDataSetChanged();
             return holder;
         }
 
@@ -246,6 +287,7 @@ public class Puckup extends AppCompatActivity {
             //  holder.getLayoutPosition();
             //    setHasStableIds(true);
 
+;
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
                     android.R.layout.simple_spinner_item,current.spinlist);
@@ -261,7 +303,7 @@ public class Puckup extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     quantity = myHolder.qty.getText().toString();
-                    Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
+ //                   Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -275,7 +317,7 @@ public class Puckup extends AppCompatActivity {
                     Object item = parent.getItemAtPosition(position);
                     price = tarif.get(position).getPrice();
                     type = tarif.get(position).getType();
-                    Toast.makeText(context,price, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context,price, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -301,6 +343,12 @@ public class Puckup extends AppCompatActivity {
                     else
                     {
                         AddtoList();
+
+                        dd.remove(type);
+                        tarif.remove(position);
+                        Adapter.notifyDataSetChanged();
+                      //  Displaylist();
+
                         myHolder.qty.setText("");
 
                         tableLayout.setVisibility(View.VISIBLE);
@@ -309,6 +357,8 @@ public class Puckup extends AppCompatActivity {
 
                 }
             });
+
+
 
         }
 
@@ -322,15 +372,15 @@ public class Puckup extends AppCompatActivity {
         class MyHolder extends RecyclerView.ViewHolder {
           EditText qty;
             Spinner spinner;
-            ImageButton plus;
-            ImageButton minus;
+            Button plus;
+
             // create constructor to get widget reference
             public MyHolder(View itemView) {
                 super(itemView);
                 qty = (EditText)itemView.findViewById(R.id.qty);
                 spinner = (Spinner)itemView.findViewById(R.id.spinner);
-                plus = (ImageButton)itemView.findViewById(R.id.plus);
-                minus = (ImageButton)itemView.findViewById(R.id.minus);
+                plus = (Button)itemView.findViewById(R.id.plus);
+
                 //  id= (TextView)itemView.findViewById(R.id.id);
             }
 
@@ -343,7 +393,49 @@ public class Puckup extends AppCompatActivity {
                     Float fo2 = Float.parseFloat(price);
                     Float x = foo * fo2;
                     amount =Float.toString(x);
-        filterdata2.add(new DataFish2(type,quantity,price,amount));
+                    if (filterdata2.isEmpty()){
+                        Log.e("ononcontains","oncontains");
+                        filterdata2.add(new DataFish2(type,quantity,price,amount));
+
+                    }
+
+                    else {
+
+                        filterdata2.add(new DataFish2(type,quantity,price,amount));
+                    }
+//                    else {
+//                        for (int k = 0; k < filterdata2.size(); k++) {
+//                            Log.e(filterdata2.get(k).item, type);
+//                            if (type.equalsIgnoreCase(filterdata2.get(k).item)) {
+//                                String oldqty = filterdata2.get(k).noofpieces;
+//                                Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(oldqty);
+//                                Float fo1 = Float.parseFloat(price);
+//                                Float xy = foo1 * fo1;
+//                                String amount2 = Float.toString(xy);
+//
+//                                String newqty = Float.toString(foo1);
+//
+//                                Log.e("contains", "contains");
+//                                filterdata2.set(k, new DataFish2(type, newqty, price, amount2));
+//                                Adapter2.notifyDataSetChanged();
+//
+//
+//                            }
+//
+//
+//                            else {
+//
+//                                filterdata2.add(new DataFish2(type,quantity,price,amount));
+//
+//
+//                            }
+//
+//                        }
+//
+//                    }
+
+
+
         Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
         Adapter2.setHasStableIds(false);
         mRVFishPrice2.setAdapter(Adapter2);
@@ -356,14 +448,11 @@ public class Puckup extends AppCompatActivity {
             sum += dd;
         }
         Log.e("rererer", String.valueOf(sum));
-        btmamt.setText("Sub Total = " +String.valueOf(sum));
-
+        //   btmamt.setText("Sub Total = " +String.valueOf(sum));
         double s =  ((18.0/100) *sum)+sum;
-        btmtotal.setText("Total = " +String.valueOf(s));
+        btmtotal.setText("Total = "+getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
 
         pay.setVisibility(View.VISIBLE);
-
-
 
     }
 
@@ -405,7 +494,7 @@ public class Puckup extends AppCompatActivity {
             myHolder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
+ //                   Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
 
                     filterdata2.remove(position);
                     Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
@@ -420,17 +509,17 @@ public class Puckup extends AppCompatActivity {
                         sum += dd;
                     }
                     Log.e("rererer", String.valueOf(sum));
-                    btmamt.setText("Sub Total = " +String.valueOf(sum));
+                    //btmamt.setText("Sub Total = " +String.valueOf(sum));
 
                      s =  ((18.0/100) *sum)+sum;
-                    btmtotal.setText("Total = " +String.valueOf(s));
+                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
                 }
             });
             myHolder.plus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
+ //                   Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
 
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -441,30 +530,43 @@ public class Puckup extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String YouEditTextValue = edittext.getText().toString();
-                                    edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                    Toast.makeText(context, YouEditTextValue, Toast.LENGTH_SHORT).show();
-                                    Float foo = Float.parseFloat(YouEditTextValue);
-                                    Float fo2 = Float.parseFloat(current.cost);
-                                    Float x = foo * fo2;
-                                    String suu =Float.toString(x);
-                                    filterdata2.set(position, new DataFish2(current.item,YouEditTextValue,current.cost,suu));
-                                    Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
-                                    Adapter2.setHasStableIds(false);
-                                    mRVFishPrice2.setAdapter(Adapter2);
-                                    mRVFishPrice2.setHasFixedSize(false);
-                                    mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,false));
-                                    float sum = 0;
-                                    for (int i = 0; i < filterdata2.size(); i++) {
+                                    edittext.setInputType(InputType.TYPE_CLASS_NUMBER |
+                                            InputType.TYPE_NUMBER_FLAG_DECIMAL |
+                                            InputType.TYPE_NUMBER_FLAG_SIGNED);
+//                                    Toast.makeText(context, YouEditTextValue, Toast.LENGTH_SHORT).show();
+                                    try {
+                                        int num = Integer.parseInt(YouEditTextValue);
+                                        Log.i("",num+" is a number");
 
-                                        Float dd = Float.parseFloat(filterdata2.get(i).amt);
-                                        sum += dd;
+                                        Float foo = Float.parseFloat(YouEditTextValue);
+                                        Float fo2 = Float.parseFloat(current.cost);
+                                        Float x = foo * fo2;
+                                        String suu =Float.toString(x);
+
+
+                                        filterdata2.set(position, new DataFish2(current.item,YouEditTextValue,current.cost,suu));
+                                        Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
+                                        Adapter2.setHasStableIds(false);
+                                        mRVFishPrice2.setAdapter(Adapter2);
+                                        mRVFishPrice2.setHasFixedSize(false);
+                                        mRVFishPrice2.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,false));
+                                        float sum = 0;
+                                        for (int i = 0; i < filterdata2.size(); i++) {
+
+                                            Float dd = Float.parseFloat(filterdata2.get(i).amt);
+                                            sum += dd;
+                                        }
+
+                                        //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+                                        double s =  ((18.0/100) *sum)+sum;
+                                        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+                                        Log.e("rererer", String.valueOf(s));
+                                    } catch (NumberFormatException e) {
+                                        Toast.makeText(context, "Enter only numbers", Toast.LENGTH_SHORT).show();
                                     }
 
-                                    btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                                    double s =  ((18.0/100) *sum)+sum;
-                                    btmtotal.setText("Total = " +String.valueOf(s));
-                                    Log.e("rererer", String.valueOf(s));
 
                                 }
                             });
@@ -489,7 +591,7 @@ public class Puckup extends AppCompatActivity {
             TextView noofpices;
             TextView cost;
             TextView amount;
-            ImageButton plus;
+            Button plus;
             ImageButton minus;
             ImageButton delete;
 
@@ -500,7 +602,7 @@ public class Puckup extends AppCompatActivity {
                 noofpices = (TextView)itemView.findViewById(R.id.noofpices);
                 cost = (TextView)itemView.findViewById(R.id.cost);
                 amount = (TextView)itemView.findViewById(R.id.total);
-                plus = (ImageButton)itemView.findViewById(R.id.plus);
+                plus = (Button)itemView.findViewById(R.id.plus);
                 minus = (ImageButton)itemView.findViewById(R.id.minus);
                 delete = (ImageButton)itemView.findViewById(R.id.del);
                 //  id= (TextView)itemView.findViewById(R.id.id);
@@ -570,6 +672,39 @@ public class Puckup extends AppCompatActivity {
             @Override
             public void onFailure(Request request, IOException e) {
                 String mMessage = e.getMessage().toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Puckup.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Looks like your device is offline");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                        dialogno.setText("OK");
+
+
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+
+
+
+                        openDialog.show();
+
+                    }
+                });
             }
 
             @Override

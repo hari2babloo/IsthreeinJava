@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_item_one"
+        android:icon="@drawable/logoutt"
         android:title="Camera"
-        android:icon="@drawable/logout"
         app:showAsAction="always" />
 
 

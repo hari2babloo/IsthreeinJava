@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Isthree</string>
+    <string name="rupee">₹</string>
 </resources>

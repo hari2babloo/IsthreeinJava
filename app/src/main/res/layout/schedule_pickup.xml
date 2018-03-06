@@ -7,6 +7,7 @@
 
     android:layout_margin="10dp"
     android:background="@color/cardview_light_background"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context="com.example.hari.isthreeinjava.SchedulePickup">
 
@@ -14,7 +15,7 @@
     <Button
         android:id="@+id/datebtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_marginTop="10dp"
         android:background="@color/bluee"
         android:text="Schedule Pickup"
@@ -26,7 +27,6 @@
         android:id="@+id/dates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Selected Date:"
         android:textSize="24sp" />
 
     <LinearLayout
@@ -42,14 +42,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="85"
-            android:text="Pickup"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+            android:text="ADDRESS:"
+            android:textColor="@color/bluee"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/changeadress"
-            android:layout_width="150dp"
-            android:layout_height="25dp"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
             android:layout_weight="15"
             android:background="@color/bluee"
             android:text="Change Address"
@@ -57,6 +57,13 @@
 
     </LinearLayout>
 
+
+    <View
+        android:id="@+id/v1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/bluee" />
     <TextView
         android:id="@+id/address"
         android:layout_width="match_parent"
@@ -88,10 +95,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp" />
 
+    <View
+        android:id="@+id/v2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/bluee" />
+
     <Button
         android:id="@+id/confirm"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
         android:background="@color/bluee"
         android:text="Confirm Pickup"
         android:textColor="@color/cardview_light_background"

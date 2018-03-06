@@ -18,8 +18,9 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
             android:text="User Details"
+            android:textColor="@color/bluee"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -27,8 +28,10 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full Name"
-            app:met_baseColor="#0056d3"
+            android:hint="Full Name*"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -37,8 +40,10 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            app:met_baseColor="#0056d3"
+            android:hint=" Email*"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -47,10 +52,12 @@
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone number"
+            android:hint="Phone number*"
 
             android:inputType="number"
-            app:met_baseColor="#0056d3"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="@color/red"
             app:met_floatingLabel="highlight"
             app:met_maxCharacters="10"
@@ -63,7 +70,9 @@
             android:hint="Alternate Phone Number"
 
             android:inputType="number"
-            app:met_baseColor="#0056d3"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="@color/red"
             app:met_floatingLabel="highlight"
             app:met_maxCharacters="10"
@@ -73,8 +82,10 @@
             android:id="@+id/pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="Password*"
             android:inputType="textPassword"
+            android:singleLine="true"
+            android:textSize="14sp"
             app:met_baseColor="#0056d3"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
@@ -84,8 +95,10 @@
             android:id="@+id/cnfpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm Password"
+            android:hint="Confirm Password*"
             android:inputType="textPassword"
+            android:singleLine="true"
+            android:textSize="14sp"
             app:met_baseColor="#0056d3"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
@@ -95,17 +108,21 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:text="Address"
-            android:textSize="20sp"
+            android:textColor="@color/bluee"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/door"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Door No/Street"
-            app:met_baseColor="#0056d3"
+            android:hint="Door No/Street/Area*"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -114,8 +131,10 @@
             android:id="@+id/land"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="LandMark"
-            app:met_baseColor="#0056d3"
+            android:hint="LandMark*"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -124,8 +143,10 @@
             android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="City"
-            app:met_baseColor="#0056d3"
+            android:hint="City*"
+            android:singleLine="true"
+            android:textSize="14sp"
+            app:met_baseColor="@color/bluee"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
@@ -134,19 +155,39 @@
             android:id="@+id/pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Pincode"
+            android:hint="Pincode*"
             android:inputType="number"
+            android:singleLine="true"
+            android:textSize="14sp"
             app:met_baseColor="#0056d3"
             app:met_errorColor="#ddaa00"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
 
+        <CheckBox
+            android:id="@+id/check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I agree," />
+
+        <TextView
+            android:id="@+id/termstext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="Terms and Conditions"
+            android:textColor="@color/bluee" />
+
         <Button
             android:id="@+id/signupbtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/bluee"
             android:gravity="center"
-            android:text="Signup" />
+            android:text="Sign up"
+            android:textColor="@color/cardview_light_background" />
 
 
     </LinearLayout>

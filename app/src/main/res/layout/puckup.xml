@@ -30,42 +30,42 @@
 
             <TextView
                 android:id="@+id/item"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Item"
                 android:textColor="@color/bluee"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/noofpices"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Qty"
                 android:textColor="@color/bluee"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cost"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Price/Qty"
+                android:text="Price"
                 android:textColor="@color/bluee"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cost2"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="amount"
+                android:text="Amount"
                 android:textColor="@color/bluee"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <ImageButton
@@ -116,16 +116,8 @@
                     android:id="@+id/btmamt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Amount"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/credits"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:text="Credits = 0"
-                    android:textSize="20sp" />
             </TableRow>
 
             <TableRow
@@ -135,19 +127,13 @@
 
 
                 <TextView
-                    android:id="@+id/gst"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GST = 18%"
-                    android:textSize="20sp" />
-
-                <TextView
                     android:id="@+id/btmtotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:text="Total"
-                    android:textSize="20sp" />
+                    android:textColor="@color/bluee"
+                    android:textSize="15sp" />
             </TableRow>
 
         </TableLayout>
@@ -155,7 +141,7 @@
         <Button
             android:id="@+id/pay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:background="@color/bluee"
             android:text="Confirm"
             android:textColor="@color/cardview_light_background" />
