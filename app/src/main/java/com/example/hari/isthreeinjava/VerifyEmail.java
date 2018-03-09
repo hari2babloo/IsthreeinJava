@@ -98,7 +98,7 @@ public class VerifyEmail extends AppCompatActivity {
                         openDialog.setContentView(R.layout.alert);
                         openDialog.setTitle("No Internet");
                         TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                        dialogTextContent.setText("Looks like your device is offline");
+                        dialogTextContent.setText("Something Went Wrong");
                         ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
                         Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
                         dialogCloseButton.setVisibility(View.GONE);

@@ -73,7 +73,7 @@ CheckBox terms;
                        "\n" +
 
                        " PAYMENT RELATED \n\n We accept payment in Cash upon Delivery of garments back to the Customer.You can estimate the bill amount at the time of handing over your garments to the Pickup Rider.The exact bill amount will be informed to the customer via SMS after garments are booked at Processing Centre.The Invoice will be handed over to the customer at the time of Delivery.We will soon incorporate Online Payment Option and the details will be able soon.All advance payment must be recorded in the Pickup Slip and signed by our Pickup Rider.");
-              // dialogTextContent.setText("Looks like your device is offline");
+              // dialogTextContent.setText("Something Went Wrong");
 //               ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
                Button dialogCloseButton = (Button)openDialog.findViewById(R.id.button);
 
@@ -234,6 +234,8 @@ CheckBox terms;
                 pd.dismiss();
                 pd.cancel();
 
+                Log.e("res",mMessage);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -241,7 +243,7 @@ CheckBox terms;
                         openDialog.setContentView(R.layout.alert);
                         openDialog.setTitle("No Internet");
                         TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                        dialogTextContent.setText("Looks like your device is offline");
+                        dialogTextContent.setText("Something Went Wrong");
                         ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
                         Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
                         dialogCloseButton.setVisibility(View.GONE);
@@ -274,6 +276,8 @@ CheckBox terms;
                 pd.dismiss();
                 pd.cancel();
                 mMessage = response.body().string();
+
+                Log.e("res",mMessage);
                 if (response.isSuccessful()){
                     runOnUiThread(new Runnable() {
                         @Override

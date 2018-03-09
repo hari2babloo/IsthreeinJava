@@ -55,7 +55,7 @@
                 android:background="#FFDADADA" />
 
             <ImageButton
-                android:id="@+id/placeorder"
+                android:id="@+id/placeordr"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:background="@drawable/placeordr" />
