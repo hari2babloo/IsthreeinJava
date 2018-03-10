@@ -12,35 +12,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-        <activity android:name=".Puckup">
-
-        </activity>
+        <activity android:name=".Puckup" />
         <activity android:name=".Main2Activity" />
         <activity
             android:name=".Splashscreen"
-            android:theme="@style/AppTheme2">
-
+            android:theme="@style/AppTheme2" />
+        <activity android:name=".Dashpage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Dashpage" />
         <activity
             android:name=".Signin"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/AppTheme2"></activity>
         <activity android:name=".Signup" />
         <activity android:name=".VerifyEmail" />
         <activity android:name=".OtpValidation" />
         <activity android:name=".SchedulePickup" />
         <activity android:name=".ChangeAddress" />
         <activity android:name="com.a3x3conect.mobile.isthreeinjava.Terms" />
-        <activity android:name=".Pickup">
-
-
-
-        </activity>
+        <activity android:name=".Pickup" />
+        <activity android:name="com.a3x3conect.mobile.isthreeinjava.ExistingData" />
+        <activity android:name="com.a3x3conect.mobile.isthreeinjava.SummaryReport" />
+        <activity android:name="com.a3x3conect.mobile.isthreeinjava.MyOrders"></activity>
     </application>
 
 </manifest>

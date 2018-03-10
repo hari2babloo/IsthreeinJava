@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="com.a3x3conect.mobile.isthreeinjava.Pickup">
+    tools:context=".Pickup">
 
     <TextView
         android:id="@+id/textView7"
@@ -14,7 +14,7 @@
         android:hint="Select your Item " />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -25,7 +25,7 @@
 
         <EditText
             android:id="@+id/qty"
-            android:layout_width="75dp"
+            android:layout_width="100dp"
             android:layout_height="50dp"
             android:ems="10"
             android:hint="Quantity"
@@ -33,10 +33,12 @@
 
         <Button
             android:id="@+id/add"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add" />
+            android:background="@color/bluee"
+            android:text="Add"
+            android:textColor="@color/cardview_light_background" />
 
 
     </LinearLayout>

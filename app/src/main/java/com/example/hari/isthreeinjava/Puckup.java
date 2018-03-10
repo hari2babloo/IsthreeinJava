@@ -2,6 +2,7 @@
 package com.example.hari.isthreeinjava;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,8 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a3x3conect.mobile.isthreeinjava.ExistingData;
+import com.a3x3conect.mobile.isthreeinjava.SummaryReport;
 import com.example.hari.isthreeinjava.Models.Sigin;
 import com.example.hari.isthreeinjava.Models.Tariff;
 import com.example.hari.isthreeinjava.Models.TinyDB;
@@ -69,15 +72,15 @@ public class Puckup extends AppCompatActivity {
     private AdapterFish2 Adapter2;
     List<DataFish> filterdata=new ArrayList<DataFish>();
     List<DataFish2> filterdata2=new ArrayList<DataFish2>();
-     String mMessage;
+     String mMessage,mMessage2;
      Button pay,add;
      TinyDB tinyDB;
      Spinner spinner;
      EditText qty;
-    double s;
 
+     ProgressDialog pd;
+    double s;
     DataFish data = new DataFish();
-//    DataFish2 data2 = new DataFish2();
     String price,type,quantity,amount;
     TextView btmamt,btmtotal;
     TableLayout tableLayout;
@@ -86,11 +89,6 @@ public class Puckup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.puckup);
-
-//        spinner  = (Spinner) findViewById(R.id.spinner);
-//        qty = (EditText)findViewById(R.id.qty);
-//        add = (Button)findViewById(R.id.add) ;
-
         tinyDB = new TinyDB(this);
         pay = (Button)findViewById(R.id.pay);
         mRVFishPrice = (RecyclerView)findViewById(R.id.fishPriceList);
@@ -108,8 +106,134 @@ public class Puckup extends AppCompatActivity {
             }
         });
 
+
+       getjoborder();
         GetFormData();
+
+
     }
+
+    private void getjoborder() {
+
+        pd = new ProgressDialog(Puckup.this);
+        pd.setMessage("Getting Job Orders..");
+        pd.setCancelable(false);
+        pd.show();
+
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject postdat = new JSONObject();
+
+        try {
+            postdat.put("customerId", tinyDB.getString("custid"));
+            postdat.put("jobId", tinyDB.getString("jobid"));
+        } catch(JSONException e){
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MEDIA_TYPE,postdat.toString());
+        final Request request = new Request.Builder()
+                .url("http://52.172.191.222/isthree/index.php/services/getJobOrder")
+                .post(body)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+                pd.cancel();
+                pd.dismiss();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Puckup.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Something Went Wrong");
+                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                        dialogno.setText("OK");
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+                        openDialog.show();
+                    }
+                });
+
+
+              mMessage2 = e.getMessage().toString();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+
+                pd.cancel();
+                pd.dismiss();
+                mMessage2 = response.body().string();
+                if (response.isSuccessful()){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            Log.e("Resy",mMessage2);
+                            // Toast.makeText(Signin.this, mMessage, Toast.LENGTH_SHORT).show();
+                         //   TraverseData();
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(mMessage2);
+
+                                Double statuscode = jsonObject.optDouble("statusCode");
+                                Double jobid = jsonObject.optDouble("jobid");
+
+
+                                if (statuscode==0){
+
+
+
+                                    Toast.makeText(Puckup.this, "Please fill the form", Toast.LENGTH_SHORT).show();
+                                }
+
+                                if (jobid>0){
+
+                                    Log.e("jobid", String.valueOf(jsonObject.getDouble("jobid")));
+
+
+                                    Intent intent = new Intent(Puckup.this, ExistingData.class);
+                                    startActivity(intent);
+
+                                    Toast.makeText(Puckup.this, "Form Data Exists", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                }
+                else runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                    }
+                });
+            }
+        });
+    }
+
+
 
     private void GetFormData() {
 
@@ -195,7 +319,6 @@ public class Puckup extends AppCompatActivity {
                 });
             }
         });
-
 
 
     }
@@ -296,10 +419,10 @@ public class Puckup extends AppCompatActivity {
             //  holder.getLayoutPosition();
             //    setHasStableIds(true);
 
-;
+            ;
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                    android.R.layout.simple_spinner_item,current.spinlist);
+                    android.R.layout.simple_spinner_item, current.spinlist);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             myHolder.spinner.setAdapter(adapter);
@@ -312,7 +435,7 @@ public class Puckup extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     quantity = myHolder.qty.getText().toString();
- //                   Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
+                    //                   Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -339,41 +462,36 @@ public class Puckup extends AppCompatActivity {
                 public void onClick(View v) {
 
 
-                    if (TextUtils.isEmpty(quantity)){
+                    if (TextUtils.isEmpty(quantity)) {
                         Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
                         //myHolder.qty.setError("empty");
-                    }
-
-                    else if (quantity.equalsIgnoreCase("0")){
+                    } else if (quantity.equalsIgnoreCase("0")) {
                         Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
 
-                    }
-
-                    else
-                    {
+                    } else {
 
 
-
-                        if (filterdata2.isEmpty()){
+                        Integer poss = 0;
+                        if (filterdata2.isEmpty()) {
                             Float foo = Float.parseFloat(quantity);
                             Float fo2 = Float.parseFloat(price);
                             Float x = foo * fo2;
-                            amount =Float.toString(x);
+                            amount = Float.toString(x);
 
-                            Log.e(type,quantity+price+amount);
+                            Log.e(type, quantity + price + amount);
                             DataFish2 ss = new DataFish2(type, quantity, price, amount);
                             filterdata2.add(ss);
                             AddtoList();
-                        }
-
-                        else if (filterdata2.size()>0) {
+                        } else if (filterdata2.size() > 0) {
 
 
-                            for (int k = 0; k < filterdata2.size(); k++) {
+                             for (int k = 0; k < filterdata2.size(); k++) {
                                 //String s = filterdata2.get(k).item;
-                                if (filterdata2.get(k).item.equalsIgnoreCase(type)) {
+                                 if (filterdata2.get(k).item.equalsIgnoreCase(type)) {
 
 
+                                     Log.e("selected value",type);
+                                     Log.e("Matched Value",filterdata2.get(k).item);
                                     String oldqty = filterdata2.get(k).noofpieces;
 
                                     Log.e(oldqty, quantity);
@@ -391,10 +509,11 @@ public class Puckup extends AppCompatActivity {
                                     DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
 
                                     filterdata2.set(k, ss);
+                                    break;
 
                                 }
 
-                                else if (!filterdata2.get(k).item.equalsIgnoreCase(type)){
+                                 else {
 
                                     Float foo = Float.parseFloat(quantity);
                                     Float fo2 = Float.parseFloat(price);
@@ -402,21 +521,63 @@ public class Puckup extends AppCompatActivity {
                                     amount =Float.toString(x);
                                     DataFish2 ss = new DataFish2(type, quantity, price, amount);
                                     filterdata2.add(ss);
+                                    break;
                                 }
+
+
+
                             }
 
-                            AddtoList();
+
+
+//                                    String oldqty = filterdata2.get(k).noofpieces;
+//
+//                                    Log.e(oldqty, quantity);
+//
+//                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(oldqty);
+//                                    Float fo1 = Float.parseFloat(price);
+//                                    Float xy = foo1 * fo1;
+//                                    String amount2 = Float.toString(xy);
+//
+//                                    String newqty = Float.toString(foo1);
+//
+//                                    Log.e("exist", "exist");
+//
+//
+//                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
+//
+//
+//
+//                                    filterdata2.set(k, ss);
+//
+//                                    break;
 
                         }
-
+//
+//                                else if (!filterdata2.get(k).item.equalsIgnoreCase(type)){
+//
+//                                    Float foo = Float.parseFloat(quantity);
+//                                    Float fo2 = Float.parseFloat(price);
+//                                    Float x = foo * fo2;
+//                                    amount =Float.toString(x);
+//                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
+//                                    filterdata2.add(ss);
+//                                    break;
+//                                }
                     }
 
+
+                    Log.e("array", String.valueOf(filterdata2));
+                    AddtoList();
+
                 }
+
+
             });
 
-
-
         }
+
+
 
         // return total item from List
         @Override
@@ -445,7 +606,7 @@ public class Puckup extends AppCompatActivity {
     }
     private void AddtoList() {
 
-        Log.e("ononcontains","oncontains");          // Log.e(u,u);
+       // Log.e("ononcontains","oncontains");          // Log.e(u,u);
         Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
         Adapter2.setHasStableIds(false);
         mRVFishPrice2.setAdapter(Adapter2);
@@ -459,7 +620,7 @@ public class Puckup extends AppCompatActivity {
         }
         Log.e("rererer", String.valueOf(sum));
         //   btmamt.setText("Sub Total = " +String.valueOf(sum));
-        double s =  ((18/100) *sum)+sum;
+         s =  ((18/100) *sum)+sum;
         btmtotal.setText("Total = "+getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
 
         pay.setVisibility(View.VISIBLE);
@@ -577,7 +738,7 @@ public class Puckup extends AppCompatActivity {
 
                                         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                                        double s =  ((18.0/100) *sum)+sum;
+                                         s =  ((18.0/100) *sum)+sum;
                                         btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
                                         Log.e("rererer", String.valueOf(s));
                                     } catch (NumberFormatException e) {
@@ -634,11 +795,8 @@ public class Puckup extends AppCompatActivity {
     }
 
     private void Paydata() {
-
         final OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject postdat = new JSONObject();
-
-
         JSONArray itemType = new JSONArray();
         JSONArray unitPrice = new JSONArray();
         JSONArray subTotal = new JSONArray();
@@ -656,24 +814,29 @@ public class Puckup extends AppCompatActivity {
 
             subTotal.put(filterdata2.get(i).amt);
         }
+        float garmentscount = 0;
         for (int i=0;i<filterdata2.size();i++){
 
+
+            float foo = Float.parseFloat(filterdata2.get(i).noofpieces);
+            garmentscount+= foo;
             quantity.put(filterdata2.get(i).noofpieces);
         }
-
         String timeStamp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
         try {
-            postdat.put("status", "PICKUP-CONFIRMED");
-            postdat.put("gstPercentage", "18%");
+          //  postdat.put("status", "PICKUP-CONFIRMED");
             postdat.put("customerId",tinyDB.getString("custid"));
+            postdat.put("jobId",tinyDB.getString("jobid"));
+            postdat.put("jobOrderDateTime",timeStamp2);
+            postdat.put("gstPercentage", "18");
             postdat.put("grandTotal",String.valueOf(s));
-            postdat.put("invoiceDateTime",timeStamp2);
-            postdat.put("jobid",tinyDB.getString("jobid"));
+            postdat.put("garmentsCount",garmentscount);
             postdat.put("itemType",itemType);
             postdat.put("unitPrice",unitPrice);
-            postdat.put("subTotal",subTotal);
             postdat.put("quantity",quantity);
+            postdat.put("subTotal",subTotal);
+
 
         } catch(JSONException e){
             // TODO Auto-generated catch block
@@ -683,7 +846,7 @@ public class Puckup extends AppCompatActivity {
 
         Log.e("array", String.valueOf(postdat));
         final Request request = new Request.Builder()
-                .url("http://52.172.191.222/isthree/index.php/services/deliveryInvoice")
+                .url("http://52.172.191.222/isthree/index.php/services/createJobOrder")
                 .post(body)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -729,92 +892,76 @@ public class Puckup extends AppCompatActivity {
             public void onResponse(Response response) throws IOException {
 
                 mMessage = response.body().string();
+
+                Log.e("result",mMessage);
+
+//                Log.e("resstsy",response.body().string());
                 if (response.isSuccessful()){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             JSONObject jsonResponse = null;
                             try {
+                                jsonResponse = new JSONObject(mMessage);
 
-                                JSONArray itemArray = new JSONArray(mMessage);
-                                for (int i = 0; i < itemArray.length(); i++) {
-                                    // int value=itemArray.getInt(i);
-                                    String sss = itemArray.getString(i);
-                                    jsonResponse = new JSONObject(sss);
+                                if (jsonResponse.getString("statusCode").equalsIgnoreCase("0")){
 
-                                    jsonResponse.getString("status");
-                                    jsonResponse.getString("statusCode");
+                                    final Dialog openDialog = new Dialog(Puckup.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("Error");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(jsonResponse.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                    dialogno.setVisibility(View.GONE);
 
-                                    if (jsonResponse.getString("statusCode").equalsIgnoreCase("0")){
-
-                                        final Dialog openDialog = new Dialog(Puckup.this);
-                                        openDialog.setContentView(R.layout.alert);
-                                        openDialog.setTitle("Error");
-                                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                                        dialogTextContent.setText(jsonResponse.getString("status"));
-                                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
-                                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
-                                        dialogno.setVisibility(View.GONE);
-
-                                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                openDialog.dismiss();
+                                    dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
 
 //                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
 //                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
 //                                                startActivity(intent);
-                                            }
-                                        });
+                                        }
+                                    });
 
-                                        openDialog.show();
-                                    }
-
-                                    else if (jsonResponse.getString("statusCode").equalsIgnoreCase("1")){
-
-
-
-                                        final Dialog openDialog = new Dialog(Puckup.this);
-                                        openDialog.setContentView(R.layout.alert);
-                                        openDialog.setTitle("Success");
-                                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                                        dialogTextContent.setText(jsonResponse.getString("status"));
-                                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
-                                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
-                                        dialogno.setVisibility(View.GONE);
-
-                                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                openDialog.dismiss();
-
-                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        //
-                                        Log.e("json",sss);
-
-                                        openDialog.show();
-                                    }
-
-
-
+                                    openDialog.show();
                                 }
 
+                                else if (jsonResponse.getString("statusCode").equalsIgnoreCase("1")){
 
+
+
+                                    final Dialog openDialog = new Dialog(Puckup.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("Success");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(jsonResponse.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                    dialogno.setVisibility(View.GONE);
+
+                                    dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
+
+                                            //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(Puckup.this,SummaryReport.class);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    //
+                                    //  Log.e("json",sss);
+
+                                    openDialog.show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-
-
-
-
-
 
                         }
                     });
