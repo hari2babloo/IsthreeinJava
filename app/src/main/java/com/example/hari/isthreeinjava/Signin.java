@@ -58,7 +58,21 @@ public class Signin extends AppCompatActivity {
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Validate();
+
+
+                if (userid.getText().toString().isEmpty()){
+
+                    userid.setError("Please Enter User ID");
+                }
+                else if (pass.getText().toString().isEmpty()){
+
+                    pass.setError("Please Enter Your Password");
+
+                }
+                else {
+                    Validate();
+                }
+
             }
         });
         signuptxt.setOnClickListener(new View.OnClickListener() {

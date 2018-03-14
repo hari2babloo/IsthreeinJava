@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:orientation="vertical"
     tools:context="com.a3x3conect.mobile.isthreeinjava.SummaryReport">
 
@@ -24,7 +25,6 @@
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
 
 
         <TextView
@@ -84,6 +84,7 @@
         android:layout_alignParentBottom="true"
 
         android:layout_marginTop="80dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TableLayout
@@ -98,7 +99,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:gravity="center">
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:id="@+id/grdtotal"
+                    android:text="Amount"
+                    android:textColor="@color/bluee"
+                    android:textSize="15sp" />
 
             </TableRow>
 
@@ -116,21 +124,32 @@
                     android:textColor="@color/bluee"
                     android:textSize="15sp" />
 
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+
                 <TextView
                     android:id="@+id/btmtotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Total"
                     android:textColor="@color/colorAccent"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
             </TableRow>
 
         </TableLayout>
 
         <Button
             android:id="@+id/home"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="35dp"
+            android:layout_margin="5dp"
             android:background="@color/bluee"
             android:text="Home"
             android:textColor="@color/cardview_light_background" />
@@ -141,7 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="You can update your options from Paceorder menu"
+            android:text="You can update your options from Enter order menu"
             android:textColor="@color/bluee"
             android:textSize="12sp" />
 

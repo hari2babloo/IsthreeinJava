@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="30dp"
+    android:layout_height="match_parent"
     android:background="@color/cardview_light_background"
     android:gravity="center"
     android:orientation="vertical"
@@ -20,10 +19,12 @@
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:hint="Email"
+        android:singleLine="true"
         android:textSize="14sp"
         app:met_baseColor="@color/bluee"
-        app:met_errorColor="#ddaa00"
+        app:met_errorColor="@android:color/holo_red_dark"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/bluee" />
 

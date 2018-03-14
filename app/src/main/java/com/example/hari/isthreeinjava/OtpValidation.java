@@ -85,6 +85,8 @@ public class OtpValidation extends AppCompatActivity {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MEDIA_TYPE,postdat.toString());
+
+        Log.e("string",postdat.toString());
         final Request request = new Request.Builder()
                 .url("http://52.172.191.222/isthree/index.php/services/changePassword")
                 .post(body)
@@ -143,15 +145,71 @@ public class OtpValidation extends AppCompatActivity {
 
                                 if (s.equalsIgnoreCase("0")){
 
-                                    Toast.makeText(OtpValidation.this, "Your OTP is incorrect", Toast.LENGTH_LONG).show();
+                                    final Dialog openDialog = new Dialog(OtpValidation.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("No Internet");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(json.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    dialogCloseButton.setVisibility(View.GONE);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                                    dialogno.setText("OK");
+
+
+                                    dialogno.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                                        }
+                                    });
+
+
+
+                                    openDialog.show();
+//                                    Toast.makeText(OtpValidation.this, "Your OTP is incorrect", Toast.LENGTH_LONG).show();
                                 }
 
                                 else if (s.equalsIgnoreCase("1")){
 
+                                    final Dialog openDialog = new Dialog(OtpValidation.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("No Internet");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(json.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    dialogCloseButton.setVisibility(View.GONE);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+
+                                    dialogno.setText("OK");
+
+
+                                    dialogno.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
+
+                                            Intent intent = new Intent(OtpValidation.this,Signin.class);
+                                            startActivity(intent);
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                                        }
+                                    });
+
+
+
+                                    openDialog.show();
+
                                     Log.e("resfsdf",mMessage);
-                                    Toast.makeText(OtpValidation.this, "Your password has changed succesfully", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(OtpValidation.this,Signin.class);
-                                    startActivity(intent);
+//                                    Toast.makeText(OtpValidation.this, "Your password has changed succesfully", Toast.LENGTH_LONG).show();
+
                                 }
                                 Log.e("s",s);
                             } catch (JSONException e) {

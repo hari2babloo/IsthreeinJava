@@ -24,31 +24,25 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Full Name*"
             android:singleLine="true"
             android:textSize="14sp"
-            app:met_baseColor="@color/bluee"
-            app:met_errorColor="#ddaa00"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/bluee" />
+            />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" Email*"
             android:singleLine="true"
             android:textSize="14sp"
-            app:met_baseColor="@color/bluee"
-            app:met_errorColor="#ddaa00"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/bluee" />
+ />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,10 +54,10 @@
             app:met_baseColor="@color/bluee"
             app:met_errorColor="@color/red"
             app:met_floatingLabel="highlight"
-            app:met_maxCharacters="10"
+            app:met_maxCharacters="13"
             app:met_primaryColor="@color/bluee" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/altphone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,10 +69,10 @@
             app:met_baseColor="@color/bluee"
             app:met_errorColor="@color/red"
             app:met_floatingLabel="highlight"
-            app:met_maxCharacters="10"
+            app:met_maxCharacters="13"
             app:met_primaryColor="@color/bluee" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +85,7 @@
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/bluee" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/cnfpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,43 +109,34 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/door"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Door No/Street/Area*"
             android:singleLine="true"
             android:textSize="14sp"
-            app:met_baseColor="@color/bluee"
-            app:met_errorColor="#ddaa00"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/bluee" />
+ />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/land"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="LandMark*"
             android:singleLine="true"
             android:textSize="14sp"
-            app:met_baseColor="@color/bluee"
-            app:met_errorColor="#ddaa00"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/bluee" />
+ />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="City*"
             android:singleLine="true"
             android:textSize="14sp"
-            app:met_baseColor="@color/bluee"
-            app:met_errorColor="#ddaa00"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/bluee" />
+ />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

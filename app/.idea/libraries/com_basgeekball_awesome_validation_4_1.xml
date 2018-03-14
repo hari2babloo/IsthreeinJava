@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.basgeekball:awesome-validation-4.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/awesome-validation-4.1.aar/aefd85aaa84e4a06ba6c0a6e6f5a9fca/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/awesome-validation-4.1.aar/aefd85aaa84e4a06ba6c0a6e6f5a9fca/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.basgeekball/awesome-validation/4.1/c088eafa968d9da701968be02f5b9ae9102d7d4d/awesome-validation-4.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

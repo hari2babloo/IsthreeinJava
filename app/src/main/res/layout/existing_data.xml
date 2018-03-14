@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="5dp"
     android:orientation="vertical"
     tools:context="com.a3x3conect.mobile.isthreeinjava.ExistingData">
 
@@ -103,15 +104,18 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fishPriceList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
     </android.support.v7.widget.RecyclerView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
 
+        android:layout_margin="5dp"
         android:orientation="vertical">
 
         <TableLayout
@@ -153,7 +157,6 @@
             </TableRow>
 
         </TableLayout>
-
 
 
     </LinearLayout>

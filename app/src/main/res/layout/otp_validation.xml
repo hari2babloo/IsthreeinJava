@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
     android:background="@color/cardview_light_background"
     android:gravity="center"
     android:orientation="vertical"
@@ -20,11 +19,14 @@
         android:id="@+id/otp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:hint="Enter OTP"
         android:inputType="number"
+        android:singleLine="true"
         android:textSize="14sp"
         app:met_baseColor="@color/bluee"
-        app:met_errorColor="#ddaa00"
+        app:met_errorColor="@android:color/holo_red_dark"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/bluee" />
 
@@ -32,11 +34,14 @@
         android:id="@+id/pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:hint="Enter New Password"
         android:inputType="textPassword"
+        android:singleLine="true"
         android:textSize="14sp"
         app:met_baseColor="@color/bluee"
-        app:met_errorColor="#ddaa00"
+        app:met_errorColor="@android:color/holo_red_dark"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/bluee" />
 
@@ -44,11 +49,14 @@
         android:id="@+id/cnfpass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:hint="Confirm Password"
         android:inputType="textPassword"
+        android:singleLine="true"
         android:textSize="14sp"
         app:met_baseColor="@color/bluee"
-        app:met_errorColor="#ddaa00"
+        app:met_errorColor="@android:color/holo_red_dark"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/bluee" />
 
@@ -65,6 +73,7 @@
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="OTP will be sent to your Registered Mobile Number"
         android:textColor="@color/bluee" />
 

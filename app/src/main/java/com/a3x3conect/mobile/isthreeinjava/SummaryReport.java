@@ -49,7 +49,7 @@ public class SummaryReport extends AppCompatActivity {
 ProgressDialog pd;
     RecyclerView mRVFishPrice;
     TableLayout tableLayout;
-    TextView btmtotal;
+    TextView btmtotal,grdtotal;
     List<DataFish2> filterdata2=new ArrayList<DataFish2>();
     private AdapterFish Adapter;
     Button home;
@@ -79,6 +79,7 @@ ProgressDialog pd;
         mRVFishPrice = (RecyclerView)findViewById(R.id.fishPriceList);
         tableLayout = (TableLayout)findViewById(R.id.tabl);
         btmtotal = (TextView)findViewById(R.id.btmtotal);
+        grdtotal = (TextView)findViewById(R.id.grdtotal);
 
      //   filterdata2 =   (ArrayList<DataFish2>)getIntent().getSerializableExtra("FILES_TO_SEND");
         
@@ -187,6 +188,10 @@ ProgressDialog pd;
                                     Float ss2 = Float.parseFloat(jobOrder.getPrice().get(i));
 
                                     Float ss3 =  Float.parseFloat(jobOrder.getQuantity().get(i));
+
+
+
+
                                     Float ss4 = ss2 * ss3;
                                     DataFish2 sds = new DataFish2(jobOrder.getCategory().get(i),jobOrder.getQuantity().get(i),jobOrder.getPrice().get(i),String.valueOf(ss4));
 
@@ -194,16 +199,25 @@ ProgressDialog pd;
                                     filterdata2.add(sds);
                                 }
 
+                                float sum = 0;
                                 float garmentscount = 0;
                                 for (int i=0;i<filterdata2.size();i++){
 
 
                                     float foo = Float.parseFloat(filterdata2.get(i).noofpieces);
+                                    float foo3 = Float.parseFloat(filterdata2.get(i).amt);
+
+
+
+                                    sum+=foo3;
+
                                     garmentscount+= foo;
                                  //   quantity.put(filterdata2.get(i).noofpieces);
                                 }
 
                                 btmtotal.setText(String.valueOf(Math.round(garmentscount)));
+                                s =  ((18.0/100) *sum)+sum;
+                                grdtotal.setText("Total : " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
                                 Adapter = new SummaryReport.AdapterFish(SummaryReport.this, filterdata2);
                                 Adapter.setHasStableIds(false);
                                 mRVFishPrice.setAdapter(Adapter);

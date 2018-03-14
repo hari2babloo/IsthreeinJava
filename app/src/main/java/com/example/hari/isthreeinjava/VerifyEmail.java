@@ -130,6 +130,8 @@ public class VerifyEmail extends AppCompatActivity {
                 pd.cancel();
                 pd.dismiss();
                 mMessage = response.body().string();
+
+                Log.e("error",mMessage);
                 if (response.isSuccessful()){
                     runOnUiThread(new Runnable() {
                         @Override
@@ -141,7 +143,9 @@ public class VerifyEmail extends AppCompatActivity {
 
                                 if (s.equalsIgnoreCase("0")){
 
-                                    Toast.makeText(VerifyEmail.this, "Enter Valid Email Id", Toast.LENGTH_LONG).show();
+                                    email.setError("Enter Valid Email ID");
+
+                                    //Toast.makeText(VerifyEmail.this, "Enter Valid Email Id", Toast.LENGTH_LONG).show();
                                 }
 
                                 else if (s.equalsIgnoreCase("1")){

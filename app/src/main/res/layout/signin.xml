@@ -23,11 +23,11 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:hint="Email"
+        android:hint="Customer ID/Phone/Email"
         android:singleLine="true"
         android:textSize="14sp"
         app:met_baseColor="@color/bluee"
-        app:met_errorColor="#ddaa00"
+        app:met_errorColor="@android:color/holo_red_dark"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/bluee" />
 
@@ -43,7 +43,7 @@
         android:singleLine="true"
         android:textSize="14sp"
         app:met_baseColor="@color/bluee"
-        app:met_errorColor="#ddaa00"
+        app:met_errorColor="@android:color/holo_red_dark"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/bluee" />
 

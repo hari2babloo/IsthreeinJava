@@ -19,26 +19,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_weight="0"
             android:gravity="bottom|center"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:background="@drawable/logo" />
 
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="#FFDADADA" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="bottom|center"
             android:orientation="horizontal">
@@ -47,7 +51,7 @@
                 android:id="@+id/pickup"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:background="@drawable/pickup" />
+                android:background="@drawable/schedule" />
 
             <View
                 android:layout_width="1dp"
@@ -58,7 +62,7 @@
                 android:id="@+id/placeordr"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:background="@drawable/placeordr" />
+                android:background="@drawable/enterorder" />
 
 
         </LinearLayout>

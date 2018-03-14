@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -79,7 +80,7 @@ public class Puckup extends AppCompatActivity {
      EditText qty;
 
      ProgressDialog pd;
-    double s;
+    double s,q;
     DataFish data = new DataFish();
     String price,type,quantity,amount;
     TextView btmamt,btmtotal;
@@ -201,7 +202,7 @@ public class Puckup extends AppCompatActivity {
 
 
 
-                                    Toast.makeText(Puckup.this, "Please fill the form", Toast.LENGTH_SHORT).show();
+ //                                   Toast.makeText(Puckup.this, "Please fill the form", Toast.LENGTH_SHORT).show();
                                 }
 
                                 if (jobid>0){
@@ -212,7 +213,7 @@ public class Puckup extends AppCompatActivity {
                                     Intent intent = new Intent(Puckup.this, ExistingData.class);
                                     startActivity(intent);
 
-                                    Toast.makeText(Puckup.this, "Form Data Exists", Toast.LENGTH_SHORT).show();
+ //                                   Toast.makeText(Puckup.this, "Form Data Exists", Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (JSONException e) {
@@ -435,6 +436,7 @@ public class Puckup extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     quantity = myHolder.qty.getText().toString();
+
                     //                   Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
                 }
 
@@ -447,8 +449,10 @@ public class Puckup extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Object item = parent.getItemAtPosition(position);
+                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
                     price = tarif.get(position).getPrice();
                     type = tarif.get(position).getType();
+
 //                    Toast.makeText(context,price, Toast.LENGTH_SHORT).show();
                 }
 
@@ -469,6 +473,7 @@ public class Puckup extends AppCompatActivity {
                         Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
 
                     } else {
+
 
 
                         Integer poss = 0;
@@ -618,10 +623,14 @@ public class Puckup extends AppCompatActivity {
             Float dd = Float.parseFloat(filterdata2.get(i).amt);
             sum += dd;
         }
-        Log.e("rererer", String.valueOf(sum));
-        //   btmamt.setText("Sub Total = " +String.valueOf(sum));
-         s =  ((18/100) *sum)+sum;
-        btmtotal.setText("Total = "+getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
+
+        //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+        s =  ((18.0/100) *sum)+sum;
+        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+        tableLayout.setVisibility(View.VISIBLE);
+
+        btmtotal.setVisibility(View.VISIBLE);
 
         pay.setVisibility(View.VISIBLE);
 
@@ -687,11 +696,11 @@ public class Puckup extends AppCompatActivity {
                         Float dd = Float.parseFloat(filterdata2.get(i).amt);
                         sum += dd;
                     }
-                    Log.e("rererer", String.valueOf(sum));
-                    //btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                     s =  ((18.0/100) *sum)+sum;
-                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
+                    //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+                    s =  ((18.0/100) *sum)+sum;
+                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
                 }
             });
             myHolder.plus.setOnClickListener(new View.OnClickListener() {
@@ -738,15 +747,12 @@ public class Puckup extends AppCompatActivity {
 
                                         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                                         s =  ((18.0/100) *sum)+sum;
+                                        s =  ((18.0/100) *sum)+sum;
                                         btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
                                         Log.e("rererer", String.valueOf(s));
                                     } catch (NumberFormatException e) {
                                         Toast.makeText(context, "Enter only numbers", Toast.LENGTH_SHORT).show();
                                     }
-
-
-
                                 }
                             });
                     builder.show();

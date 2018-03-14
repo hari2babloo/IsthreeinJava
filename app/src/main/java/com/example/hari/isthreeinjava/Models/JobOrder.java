@@ -8,13 +8,9 @@ import java.util.List;
 
 public class JobOrder {
 
-
     @SerializedName("jobid")
     @Expose
     private String jobid;
-    @SerializedName("invoiceId")
-    @Expose
-    private String invoiceId;
     @SerializedName("customerId")
     @Expose
     private String customerId;
@@ -38,13 +34,13 @@ public class JobOrder {
     private List<String> subTotal = null;
     @SerializedName("GSTPercentage")
     @Expose
-    private List<String> gSTPercentage = null;
+    private String gSTPercentage;
     @SerializedName("grandTotal")
     @Expose
     private String grandTotal;
-    @SerializedName("deliveryStatus")
+    @SerializedName("jobStatus")
     @Expose
-    private String deliveryStatus;
+    private Object jobStatus;
 
     public String getJobid() {
         return jobid;
@@ -52,14 +48,6 @@ public class JobOrder {
 
     public void setJobid(String jobid) {
         this.jobid = jobid;
-    }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
-        this.invoiceId = invoiceId;
     }
 
     public String getCustomerId() {
@@ -118,11 +106,11 @@ public class JobOrder {
         this.subTotal = subTotal;
     }
 
-    public List<String> getGSTPercentage() {
+    public String getGSTPercentage() {
         return gSTPercentage;
     }
 
-    public void setGSTPercentage(List<String> gSTPercentage) {
+    public void setGSTPercentage(String gSTPercentage) {
         this.gSTPercentage = gSTPercentage;
     }
 
@@ -134,13 +122,14 @@ public class JobOrder {
         this.grandTotal = grandTotal;
     }
 
-    public String getDeliveryStatus() {
-        return deliveryStatus;
+    public Object getJobStatus() {
+        return jobStatus;
     }
 
-    public void setDeliveryStatus(String deliveryStatus) {
-        this.deliveryStatus = deliveryStatus;
+    public void setJobStatus(Object jobStatus) {
+        this.jobStatus = jobStatus;
     }
+
 
 
 }

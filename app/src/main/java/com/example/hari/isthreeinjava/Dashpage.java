@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a3x3conect.mobile.isthreeinjava.MyOrders;
 import com.example.hari.isthreeinjava.Models.Sigin;
 import com.example.hari.isthreeinjava.Models.TinyDB;
 
@@ -36,7 +37,7 @@ import java.util.List;
 
 public class Dashpage extends AppCompatActivity {
 
-    ImageButton pick,placeorder;
+    ImageButton pick,placeorder,myorders;
     String mMessage;
     public static final MediaType MEDIA_TYPE =
             MediaType.parse("application/json");
@@ -50,7 +51,15 @@ public class Dashpage extends AppCompatActivity {
 
         pick = (ImageButton)findViewById(R.id.pickup);
         placeorder = (ImageButton)findViewById(R.id.placeordr);
+        myorders = (ImageButton)findViewById(R.id.myorders);
 
+        myorders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dashpage.this, MyOrders.class);
+                startActivity(intent);
+            }
+        });
 
 
         pick.setOnClickListener(new View.OnClickListener() {
@@ -181,41 +190,11 @@ public class Dashpage extends AppCompatActivity {
                                 }
 
                                 else if (s.equalsIgnoreCase("1")){
-
-                                    Log.e("resfsdf",mMessage);
                                     tinydb.putString("jobid",json.getString("jobid"));
 
-                                    final Dialog openDialog = new Dialog(Dashpage.this);
-                                    openDialog.setContentView(R.layout.alert);
-                                    openDialog.setTitle("Alert");
-                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                                    dialogTextContent.setText("Please place the Order only after the Arrival of the Delivery Agent");
-                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
-                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
-
-                                    dialogCloseButton.setText("YES,Agent Arrived");
-                                    dialogno.setText("NO");
-
-                                    dialogno.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            openDialog.dismiss();
-                                        }
-                                    });
-
-                                    dialogCloseButton.setOnClickListener(new View.OnClickListener(){
-                                        @Override
-                                        public void onClick(View v) {
-                                            // TODO Auto-generated method stub
-                                            openDialog.dismiss();
                                             Intent intent = new Intent(Dashpage.this, Puckup.class);
                                             startActivity(intent);
-                                        }
-                                    });
-                                    openDialog.show();
 
-  //                                  Toast.makeText(Dashpage.this, "Job ID Already Exists", Toast.LENGTH_SHORT).show();
 
                                 }
                                 Log.e("s",s);

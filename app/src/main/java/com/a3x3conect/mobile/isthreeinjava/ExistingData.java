@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -171,9 +172,12 @@ public class ExistingData extends AppCompatActivity {
 
             unitPrice.put(filterdata2.get(i).cost);
         }
+
         for (int i=0;i<filterdata2.size();i++){
 
             subTotal.put(filterdata2.get(i).amt);
+
+
         }
         float garmentscount = 0;
         for (int i=0;i<filterdata2.size();i++){
@@ -183,6 +187,17 @@ public class ExistingData extends AppCompatActivity {
             garmentscount+= foo;
             quantity.put(filterdata2.get(i).noofpieces);
         }
+
+
+        float sum = 0;
+        for (int i = 0; i < filterdata2.size(); i++) {
+
+            Float dd = Float.parseFloat(filterdata2.get(i).amt);
+            sum += dd;
+        }
+        Log.e("rererer", String.valueOf(sum));
+        //   btmamt.setText("Sub Total = " +String.valueOf(sum));
+        double s2 =  ((18/100) *sum)+sum;
         String timeStamp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
         try {
@@ -191,7 +206,7 @@ public class ExistingData extends AppCompatActivity {
             postdat.put("jobId",tinyDB.getString("jobid"));
             postdat.put("jobOrderDateTime",timeStamp2);
             postdat.put("gstPercentage", "18");
-            postdat.put("grandTotal",String.valueOf(s));
+            postdat.put("grandTotal",String.valueOf(s2));
             postdat.put("garmentsCount",garmentscount);
             postdat.put("itemType",itemType);
             postdat.put("unitPrice",unitPrice);
@@ -601,6 +616,7 @@ public class ExistingData extends AppCompatActivity {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     Object item = parent.getItemAtPosition(position);
+                                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
                                     price = prize.get(position);
                                     type = items.get(position);
 
@@ -728,10 +744,11 @@ public class ExistingData extends AppCompatActivity {
             Float dd = Float.parseFloat(filterdata2.get(i).amt);
             sum += dd;
         }
-        Log.e("rererer", String.valueOf(sum));
-        //   btmamt.setText("Sub Total = " +String.valueOf(sum));
-        double s =  ((18/100) *sum)+sum;
-        btmtotal.setText("Total = "+getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
+
+        //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+        s =  ((18.0/100) *sum)+sum;
+        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
 
         pay.setVisibility(View.VISIBLE);
     }
@@ -852,10 +869,11 @@ public class ExistingData extends AppCompatActivity {
                                     Float dd = Float.parseFloat(filterdata2.get(i).amt);
                                     sum += dd;
                                 }
-                                Log.e("rererer", String.valueOf(sum));
-                                //   btmamt.setText("Sub Total = " +String.valueOf(sum));
-                                double s =  ((18/100) *sum)+sum;
-                                btmtotal.setText("Total = "+getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
+
+                                //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+                                s =  ((18.0/100) *sum)+sum;
+                                btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
 
                                 pay.setVisibility(View.VISIBLE);
 
@@ -965,11 +983,12 @@ public class ExistingData extends AppCompatActivity {
                         Float dd = Float.parseFloat(filterdata2.get(i).amt);
                         sum += dd;
                     }
-                    Log.e("rererer", String.valueOf(sum));
-                    //btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+                    //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
                     s =  ((18.0/100) *sum)+sum;
-                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
+                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+
                 }
             });
 
@@ -1073,5 +1092,11 @@ public class ExistingData extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ExistingData.this,Dashpage.class);
+        startActivity(intent);
     }
 }
