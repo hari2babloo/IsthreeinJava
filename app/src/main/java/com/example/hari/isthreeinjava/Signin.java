@@ -2,7 +2,9 @@ package com.example.hari.isthreeinjava;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,12 +51,29 @@ public class Signin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin);
+
+
+
+
+
         tinyDB = new TinyDB(this);
+
+        Log.e("custid",tinyDB.getString("custid"));
+        String s = tinyDB.getString("custid");
+        if (s != null && !s.isEmpty()){
+
+            Intent intent = new Intent(Signin.this,Dashpage.class);
+            startActivity(intent);
+        }
+
         userid  = (MaterialEditText)findViewById(R.id.userid);
         pass = (MaterialEditText)findViewById(R.id.pass);
         signin = (Button)findViewById(R.id.signin);
         signuptxt = (TextView)findViewById(R.id.signuptext);
         forgotpass = (TextView)findViewById(R.id.forgotpass);
+
+
+
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

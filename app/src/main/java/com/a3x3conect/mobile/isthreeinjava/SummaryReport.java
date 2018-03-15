@@ -216,8 +216,8 @@ ProgressDialog pd;
                                 }
 
                                 btmtotal.setText(String.valueOf(Math.round(garmentscount)));
-                                s =  ((18.0/100) *sum)+sum;
-                                grdtotal.setText("Total : " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+                                s =  ((0.0/100) *sum)+sum;
+                                grdtotal.setText("Total : " +getResources().getString(R.string.rupee)+String.format("%.2f",s)+"(Inc of all taxes)");
                                 Adapter = new SummaryReport.AdapterFish(SummaryReport.this, filterdata2);
                                 Adapter.setHasStableIds(false);
                                 mRVFishPrice.setAdapter(Adapter);
@@ -345,5 +345,12 @@ ProgressDialog pd;
 
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent(SummaryReport.this,Dashpage.class);
+        startActivity(intent);
     }
 }

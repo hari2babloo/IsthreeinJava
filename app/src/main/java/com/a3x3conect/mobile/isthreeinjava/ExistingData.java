@@ -31,13 +31,15 @@ import android.widget.Toast;
 
 import com.example.hari.isthreeinjava.Dashpage;
 import com.example.hari.isthreeinjava.Models.JobOrder;
+import com.example.hari.isthreeinjava.Models.Tariff;
 import com.example.hari.isthreeinjava.Models.TinyDB;
 
 
-import com.example.hari.isthreeinjava.Puckup;
+import com.example.hari.isthreeinjava.Pickup;
 import com.example.hari.isthreeinjava.R;
 import com.example.hari.isthreeinjava.Signin;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -49,6 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,10 +62,15 @@ public class ExistingData extends AppCompatActivity {
 
     ProgressDialog pd;
     String mMessage2;
+    JSONObject json_data;
     private AdapterFish Adapter;
     double s;
 
+    JSONArray jsonArray;
+    List<Tariff> tarif;
     ArrayList<DataFish2> filterdata2=new ArrayList<DataFish2>();
+
+    ArrayList<DataFish> filterdata=new ArrayList<DataFish>();
     ArrayList<String> items = new ArrayList<>();
     ArrayList<String> prize = new ArrayList<>();
     final ArrayList<String> dd = new ArrayList<>();
@@ -73,12 +81,13 @@ public class ExistingData extends AppCompatActivity {
     Spinner spinner;
     EditText qty;
     Button add,pay,cancel;
+    ArrayList<String> fourdour = new ArrayList<>();
 
     public static final MediaType MEDIA_TYPE =
             MediaType.parse("application/json");
     TinyDB tinyDB;
-    
-    
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +135,8 @@ public class ExistingData extends AppCompatActivity {
 
 
 
-//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(ExistingData.this,Dashpage.class);
 //                                                startActivity(intent);
                     }
                 });
@@ -151,7 +160,7 @@ public class ExistingData extends AppCompatActivity {
                 Paydata();
             }
         });
-        getjoborder();
+
         GetFormData();
 
     }
@@ -197,7 +206,7 @@ public class ExistingData extends AppCompatActivity {
         }
         Log.e("rererer", String.valueOf(sum));
         //   btmamt.setText("Sub Total = " +String.valueOf(sum));
-        double s2 =  ((18/100) *sum)+sum;
+        double s2 =  ((0/100) *sum)+sum;
         String timeStamp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
         try {
@@ -205,7 +214,7 @@ public class ExistingData extends AppCompatActivity {
             postdat.put("customerId",tinyDB.getString("custid"));
             postdat.put("jobId",tinyDB.getString("jobid"));
             postdat.put("jobOrderDateTime",timeStamp2);
-            postdat.put("gstPercentage", "18");
+            postdat.put("gstPercentage", "0");
             postdat.put("grandTotal",String.valueOf(s2));
             postdat.put("garmentsCount",garmentscount);
             postdat.put("itemType",itemType);
@@ -250,8 +259,8 @@ public class ExistingData extends AppCompatActivity {
                             public void onClick(View v) {
                                 openDialog.dismiss();
 
-//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(ExistingData.this,Dashpage.class);
 //                                                startActivity(intent);
                             }
                         });
@@ -297,8 +306,8 @@ public class ExistingData extends AppCompatActivity {
                                         public void onClick(View v) {
                                             openDialog.dismiss();
 
-//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(ExistingData.this,Dashpage.class);
 //                                                startActivity(intent);
                                         }
                                     });
@@ -325,7 +334,7 @@ public class ExistingData extends AppCompatActivity {
                                         public void onClick(View v) {
                                             openDialog.dismiss();
 
-                                            //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+                                            //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(ExistingData.this,SummaryReport.class);
 
                        //                     tinyDB.putListString("filterdata",filterdata2);
@@ -368,10 +377,10 @@ public class ExistingData extends AppCompatActivity {
         JSONObject postdat = new JSONObject();
 
         try {
-            postdat.put("customerId", tinyDB.getString("custid"));
+          //  postdat.put("customerId", tinyDB.getString("custid"));
             postdat.put("jobId", tinyDB.getString("jobid"));
 //                        postdat.put("customerId", "C0016");
-//            postdat.put("jobId", "20180309051221");
+//            postdat.put("jobId", "2000309051221");
         } catch(JSONException e){
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -380,7 +389,7 @@ public class ExistingData extends AppCompatActivity {
 
         Log.e("Postdata",postdat.toString());
         final Request request = new Request.Builder()
-                .url("http://52.172.191.222/isthree/index.php/services/cancelJobRequest")
+                .url("http://52.172.191.222/isthree/index.php/services/cancelJobOrder")
                 .post(body)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -411,8 +420,8 @@ public class ExistingData extends AppCompatActivity {
                             public void onClick(View v) {
                                 openDialog.dismiss();
 
-//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(ExistingData.this,Dashpage.class);
 //                                                startActivity(intent);
                             }
                         });
@@ -466,7 +475,7 @@ public class ExistingData extends AppCompatActivity {
                                         public void onClick(View v) {
                                             openDialog.dismiss();
 
-//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(ExistingData.this,Dashpage.class);
                                                 startActivity(intent);
                                         }
@@ -497,8 +506,8 @@ public class ExistingData extends AppCompatActivity {
                                         public void onClick(View v) {
                                             openDialog.dismiss();
 
-//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(ExistingData.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(ExistingData.this,Dashpage.class);
 //                                                startActivity(intent);
                                         }
                                     });
@@ -591,21 +600,33 @@ public class ExistingData extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            try {
-                                JSONArray array = new JSONArray(mMessage);
-                                for(int j = 0; j < array.length(); j++){
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<Tariff>>(){}.getType();
+                            tarif = (List<Tariff>)  gson.fromJson(mMessage,listType);
 
-                                    JSONObject json_data = array.getJSONObject(j);
+                            for(int j = 0; j < tarif.size(); j++) {
+
+
+                                DataFish dataFish = new DataFish(tarif.get(j).getId(),tarif.get(j).getType(),tarif.get(j).getPrice());
+                                filterdata.add(dataFish);
+
+                            }
+
+                            try {
+                               jsonArray = new JSONArray(mMessage);
+                                for(int j = 0; j < jsonArray.length(); j++){
+
+                                   json_data = jsonArray.getJSONObject(j);
+
                                     items.add(json_data.getString("category"));
                                     prize.add(json_data.getString("price"));
                                     Log.e("Dta",dd.toString());
                                 }
 
+                                setspinner();
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                                        android.R.layout.simple_spinner_item,items);
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                spinner.setAdapter(adapter);
+                                getjoborder();
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -616,10 +637,10 @@ public class ExistingData extends AppCompatActivity {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     Object item = parent.getItemAtPosition(position);
-                                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
+//                                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
                                     price = prize.get(position);
                                     type = items.get(position);
-
+                                    type = filterdata.get(position).Dcategory;
 
                                 }
                                 @Override
@@ -641,9 +662,68 @@ public class ExistingData extends AppCompatActivity {
                                         Toast.makeText(ExistingData.this, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
 
                                     }
+
+                                    else if (items.isEmpty()){
+
+                                        Toast.makeText(getApplicationContext(), "List is Empty", Toast.LENGTH_SHORT).show();
+                                    }
                                     else
                                     {
-                                        if (filterdata2.isEmpty()){
+
+                                        if (fourdour.isEmpty()){
+
+                                            fourdour.add(type);
+
+                                            Float foo = Float.parseFloat(quantity);
+                                            Float fo2 = Float.parseFloat(price);
+                                            Float x = foo * fo2;
+                                            amount =Float.toString(x);
+                                            Log.e(type,quantity+price+amount);
+                                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
+                                            filterdata2.add(ss);
+
+                                        }
+
+                                        else if (fourdour.contains(type)){
+
+                                            Log.e("exist", "exist");
+
+
+                                            for (int i=0;i<filterdata2.size();i++){
+
+
+                                                if (filterdata2.get(i).item.equalsIgnoreCase(type)){
+
+
+                                                    Float foo1 = Float.parseFloat(quantity);
+                                                    Float fo1 = Float.parseFloat(price);
+                                                    Float dd = Float.parseFloat(filterdata2.get(i).amt);
+                                                    Float dd2 = Float.parseFloat(filterdata2.get(i).noofpieces);
+
+                                                    s = (foo1+dd2)*fo1;
+
+                                                    float sss = foo1+dd2;
+
+
+
+
+
+
+                                                    DataFish2 ss = new DataFish2(type, String.valueOf(Math.round(sss)), price, String.valueOf(s));
+                                                    filterdata2.set(i,ss);
+                                                    break;
+
+                                                }
+                                            }
+
+                                        }
+
+                                        else {
+
+                                            fourdour.add(type);
+
+                                            Log.e("noexist", "noexist");
+
                                             Float foo = Float.parseFloat(quantity);
                                             Float fo2 = Float.parseFloat(price);
                                             Float x = foo * fo2;
@@ -652,58 +732,10 @@ public class ExistingData extends AppCompatActivity {
                                             DataFish2 ss = new DataFish2(type, quantity, price, amount);
                                             filterdata2.add(ss);
                                             AddtoList();
-                                        }
-                                        else if (filterdata2.contains(type)){
-
-                                            Log.e("NOt availavcle","Not available");
-
-                                            for (int k = 0; k < filterdata2.size(); k++) {
-
-                                                //String s = filterdata2.get(k).item;
-                                                if (filterdata2.get(k).item.contains(type)) {
-                                                    //  String oldqty = filterdata2.get(k).noofpieces;
-                                                    Log.e(filterdata2.get(k).noofpieces, quantity);
-                                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(filterdata2.get(k).noofpieces);
-                                                    Float fo1 = Float.parseFloat(price);
-                                                    Float xy = foo1 * fo1;
-                                                    String amount2 = Float.toString(xy);
-                                                    String newqty = Float.toString(foo1);
-                                                    Log.e("exist", "exist");
-                                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
-
-                                                    //  filterdata2.remove(k);
-                                                    filterdata2.add(k, ss);
-
-                                                    AddtoList();
-
-                                                }
-//                                                else{
-//
-//                                                    Float foo = Float.parseFloat(quantity);
-//                                                    Float fo2 = Float.parseFloat(price);
-//                                                    Float x = foo * fo2;
-//                                                    amount =Float.toString(x);
-//                                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
-//                                                    filterdata2.set(k,ss);
-//
-//                                                    AddtoList();
-//                                                    break;
-//                                                }
-                                            }
-
 
                                         }
-                                        else  {
 
-
-                                            Float foo = Float.parseFloat(quantity);
-                                            Float fo2 = Float.parseFloat(price);
-                                            Float x = foo * fo2;
-                                            amount =Float.toString(x);
-                                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
-                                            filterdata2.add(ss);
-                                            AddtoList();
-                                        }
+                                        AddtoList();
 
                                     }
 
@@ -729,6 +761,14 @@ public class ExistingData extends AppCompatActivity {
 
     }
 
+    private void setspinner() {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_item,items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
     private void AddtoList() {
 
 
@@ -747,8 +787,8 @@ public class ExistingData extends AppCompatActivity {
 
         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-        s =  ((18.0/100) *sum)+sum;
-        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+        s =  ((0/100) *sum)+sum;
+        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.format("%.2f",s)+"(Inc of all taxes)");
 
         pay.setVisibility(View.VISIBLE);
     }
@@ -849,6 +889,8 @@ public class ExistingData extends AppCompatActivity {
                                 for (int i= 0; i<jobOrder.getCategory().size(); i++){
 
 
+
+                                    fourdour.add(jobOrder.getCategory().get(i));
                                     DataFish2 ss = new DataFish2("item","qty","price","total");
 
                                     Float ss2 = Float.parseFloat(jobOrder.getPrice().get(i));
@@ -858,8 +900,21 @@ public class ExistingData extends AppCompatActivity {
                                     DataFish2 sds = new DataFish2(jobOrder.getCategory().get(i),jobOrder.getQuantity().get(i),jobOrder.getPrice().get(i),String.valueOf(ss4));
 
 
+//
+//                                    for (int j=0;j<items.size();i++){
+//
+//                                        if (items.get(j).equalsIgnoreCase(jobOrder.getCategory().get(i))){
+//
+//                                            items.remove(j);
+//                                            prize.remove(j);
+//                                        }
+//                                    }
+
+
+
                                     filterdata2.add(sds);
                                 }
+
 
 
 
@@ -872,7 +927,7 @@ public class ExistingData extends AppCompatActivity {
 
                                 //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                                s =  ((18.0/100) *sum)+sum;
+                                s =  ((0/100) *sum)+sum;
                                 btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
 
                                 pay.setVisibility(View.VISIBLE);
@@ -923,6 +978,24 @@ public class ExistingData extends AppCompatActivity {
 
     }
 
+    public class DataFish {
+
+
+        public String Did;
+        public String Dcategory;
+        public String Dprice;
+
+
+        public DataFish(String did, String dcategory, String dprice) {
+            Did = did;
+            Dcategory = dcategory;
+            Dprice = dprice;
+        }
+
+
+
+    }
+
     public class AdapterFish extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         List<DataFish2> data2 = Collections.emptyList();
         int currentPos = 0;
@@ -966,6 +1039,8 @@ public class ExistingData extends AppCompatActivity {
                 public void onClick(View v) {
                     //                   Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
 
+
+                    fourdour.remove(current.item);
                     filterdata2.remove(position);
 
                     //  dd.add(current.item);
@@ -986,7 +1061,7 @@ public class ExistingData extends AppCompatActivity {
 
                     //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                    s =  ((18.0/100) *sum)+sum;
+                    s =  ((0/100) *sum)+sum;
                     btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
 
                 }
@@ -1036,7 +1111,7 @@ public class ExistingData extends AppCompatActivity {
 
                                         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                                        s =  ((18.0/100) *sum)+sum;
+                                        s =  ((0.0/100) *sum)+sum;
                                         btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
                                         Log.e("rererer", String.valueOf(s));
                                     } catch (NumberFormatException e) {

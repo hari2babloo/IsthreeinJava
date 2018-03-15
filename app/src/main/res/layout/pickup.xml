@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".Pickup">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView7"
@@ -29,12 +34,12 @@
             android:layout_height="50dp"
             android:ems="10"
             android:hint="Quantity"
-            android:inputType="textPersonName" />
+            android:inputType="number" />
 
         <Button
             android:id="@+id/add"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@color/bluee"
             android:text="Add"
@@ -163,14 +168,15 @@
                 android:id="@+id/pay"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
+                android:layout_margin="10dp"
                 android:background="@color/bluee"
-                android:text="Confirm"
+                android:text="Submit"
                 android:textColor="@color/cardview_light_background" />
 
         </LinearLayout>
-
-
-
     </LinearLayout>
+
+
+    </ScrollView>
 
 

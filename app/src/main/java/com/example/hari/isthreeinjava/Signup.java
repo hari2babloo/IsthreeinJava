@@ -1,8 +1,18 @@
 package com.example.hari.isthreeinjava;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a3x3conect.mobile.isthreeinjava.GPSTracker;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.example.hari.isthreeinjava.Models.Sigin;
@@ -38,11 +49,12 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
 
-public class Signup extends AppCompatActivity {
+public class Signup extends AppCompatActivity implements LocationListener {
 
 EditText firstname,email,phone,altphone,pass,cnfpass,door,landmark,city,pin;
 Button signup;
@@ -54,11 +66,20 @@ CheckBox terms;
             MediaType.parse("application/json");
     List<Signupmodel> modelsignup;
     AwesomeValidation awesomeValidation;
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+
+        }
+
+        getLocation();
+
 
        termstext = (TextView)findViewById(R.id.termstext);
         terms = (CheckBox)findViewById(R.id.check);
@@ -208,6 +229,13 @@ CheckBox terms;
 
             }
         });
+    }
+
+     @SuppressLint("MissingPermission")
+     void getLocation() {
+
+         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, (LocationListener) this);
     }
 
     private void addValidationToViews() {
@@ -444,5 +472,36 @@ CheckBox terms;
 
 
 
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        //  locationText.setText("Latitude: " + location.getLatitude() + "\n Longitude: " + location.getLongitude());
+
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+            Log.e("location", String.valueOf(location.getLatitude() + location.getLongitude()));
+//            locationText.setText(locationText.getText() + "\n"+addresses.get(0).getAddressLine(0)+", "+
+//                    addresses.get(0).getAddressLine(1)+", "+addresses.get(0).getAddressLine(2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+        @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Toast.makeText(Signup.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
     }
 }

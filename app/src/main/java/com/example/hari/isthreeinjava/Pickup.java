@@ -2,6 +2,7 @@
 package com.example.hari.isthreeinjava;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,8 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a3x3conect.mobile.isthreeinjava.ExistingData;
+import com.a3x3conect.mobile.isthreeinjava.SummaryReport;
 import com.example.hari.isthreeinjava.Models.Sigin;
 import com.example.hari.isthreeinjava.Models.Tariff;
 import com.example.hari.isthreeinjava.Models.TinyDB;
@@ -63,29 +66,36 @@ public class Pickup extends AppCompatActivity {
 
     JSONArray jsonArray;
     ListView plist;
-    List<Tariff> tarif,tarrif2;
+    List<Tariff> tarif;
+    ProgressDialog pd;
+    String mMessage2;
     RecyclerView mRVFishPrice,mRVFishPrice2;
 
     private AdapterFish2 Adapter2;
-    List<DataFish> filterdata=new ArrayList<DataFish>();
-    ArrayList<DataFish2> filterdata2=new ArrayList<DataFish2>();
+    ArrayList<DataFish> filterdata=new ArrayList<DataFish>();
+    List<DataFish2> filterdata2=new ArrayList<DataFish2>();
 
     ArrayList<String> items = new ArrayList<>();
     ArrayList<String> prize = new ArrayList<>();
+    ArrayList<String> items2 = new ArrayList<>();
+    ArrayList<String> prize2 = new ArrayList<>();
+    ArrayList<String> fourdour = new ArrayList<>();
+    static String[][][] School= new String[10][10][10];
+
 
     String mMessage;
     Button pay;
     TinyDB tinyDB;
     double s;
 
-    DataFish data = new DataFish();
-    //    DataFish2 data2 = new DataFish2();
-    String price,type,quantity,amount;
+    String price,type,quantity,amount,idd;
     TextView btmamt,btmtotal;
     TableLayout tableLayout;
     Spinner spinner;
     EditText qty;
     Button add;
+    Integer spinposition;
+    ArrayAdapter<String> adapter;
     final ArrayList<String> dd = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +118,142 @@ public class Pickup extends AppCompatActivity {
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Paydata();
+                if (filterdata2.isEmpty()){
+
+                    Toast.makeText(Pickup.this, "Please fill the form ", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    Paydata();
+                }
             }
         });
 
-        GetFormData();
+        getjoborder();
+
+    }
+
+    private void getjoborder() {
+
+        pd = new ProgressDialog(Pickup.this);
+        pd.setMessage("Getting Job Orders..");
+        pd.setCancelable(false);
+        pd.show();
+
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        JSONObject postdat = new JSONObject();
+
+        try {
+            postdat.put("customerId", tinyDB.getString("custid"));
+            postdat.put("jobId", tinyDB.getString("jobid"));
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdat.toString());
+        final Request request = new Request.Builder()
+                .url("http://52.172.191.222/isthree/index.php/services/getJobOrder")
+                .post(body)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+                pd.cancel();
+                pd.dismiss();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Dialog openDialog = new Dialog(Pickup.this);
+                        openDialog.setContentView(R.layout.alert);
+                        openDialog.setTitle("No Internet");
+                        TextView dialogTextContent = (TextView) openDialog.findViewById(R.id.dialog_text);
+                        dialogTextContent.setText("Something Went Wrong");
+                        ImageView dialogImage = (ImageView) openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button) openDialog.findViewById(R.id.dialog_button);
+                        dialogCloseButton.setVisibility(View.GONE);
+                        Button dialogno = (Button) openDialog.findViewById(R.id.cancel);
+                        dialogno.setText("OK");
+                        dialogno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openDialog.dismiss();
+
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
+//                                                startActivity(intent);
+                            }
+                        });
+                        openDialog.show();
+                    }
+                });
+
+
+                mMessage2 = e.getMessage().toString();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+
+                pd.cancel();
+                pd.dismiss();
+                mMessage2 = response.body().string();
+                if (response.isSuccessful()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            Log.e("Resy", mMessage2);
+                            // Toast.makeText(Signin.this, mMessage, Toast.LENGTH_SHORT).show();
+                            //   TraverseData();
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(mMessage2);
+
+                                Double statuscode = jsonObject.optDouble("statusCode");
+                                Double jobid = jsonObject.optDouble("jobid");
+
+
+                                if (statuscode == 0) {
+
+
+                                    //                                   Toast.makeText(Puckup.this, "Please fill the form", Toast.LENGTH_SHORT).show();
+                                }
+
+                                if (jobid > 0) {
+
+                                    Log.e("jobid", String.valueOf(jsonObject.getDouble("jobid")));
+
+
+                                    Intent intent = new Intent(Pickup.this, ExistingData.class);
+                                    startActivity(intent);
+
+                                    //                                   Toast.makeText(Puckup.this, "Form Data Exists", Toast.LENGTH_SHORT).show();
+                                }
+
+                                else {
+
+                                    GetFormData();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                } else runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                    }
+                });
+            }
+        });
     }
 
     private void GetFormData() {
@@ -175,6 +316,20 @@ public class Pickup extends AppCompatActivity {
                         @Override
                         public void run() {
 
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<Tariff>>(){}.getType();
+                            tarif = (List<Tariff>)  gson.fromJson(mMessage,listType);
+
+
+                            for(int j = 0; j < tarif.size(); j++) {
+
+
+                                DataFish dataFish = new DataFish(tarif.get(j).getId(),tarif.get(j).getType(),tarif.get(j).getPrice());
+                                 filterdata.add(dataFish);
+
+                            }
+
+
                             try {
                                 JSONArray array = new JSONArray(mMessage);
                                 for(int j = 0; j < array.length(); j++){
@@ -182,14 +337,13 @@ public class Pickup extends AppCompatActivity {
                                     JSONObject json_data = array.getJSONObject(j);
                                     items.add(json_data.getString("category"));
                                     prize.add(json_data.getString("price"));
+                                    items2.add(json_data.getString("category"));
+                                    prize2.add(json_data.getString("price"));
                                     Log.e("Dta",dd.toString());
                                 }
 
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                                        android.R.layout.simple_spinner_item,items);
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                spinner.setAdapter(adapter);
+                             setspinner();
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -201,7 +355,10 @@ public class Pickup extends AppCompatActivity {
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     Object item = parent.getItemAtPosition(position);
                                     price = prize.get(position);
-                                    type = items.get(position);
+                                  //  type = items.get(position);
+
+                                    type = filterdata.get(position).Dcategory;
+                                    idd = filterdata.get(position).Did;
 
 
                                 }
@@ -224,69 +381,83 @@ public class Pickup extends AppCompatActivity {
                                         Toast.makeText(Pickup.this, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
 
                                     }
+                                    else if (items.isEmpty()){
+
+                                        Toast.makeText(getApplicationContext(), "List is Empty", Toast.LENGTH_SHORT).show();
+                                    }
                                     else
                                     {
-                                        if (filterdata2.isEmpty()){
+
+                                        if (fourdour.isEmpty()){
+
+                                            fourdour.add(type);
+
                                             Float foo = Float.parseFloat(quantity);
                                             Float fo2 = Float.parseFloat(price);
                                             Float x = foo * fo2;
                                             amount =Float.toString(x);
                                             Log.e(type,quantity+price+amount);
-                                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
+                                            DataFish2 ss = new DataFish2(type, quantity, price, amount,idd);
                                             filterdata2.add(ss);
-                                            AddtoList();
+
                                         }
-                                        else if (filterdata2.contains(type)){
 
-                                            Log.e("NOt availavcle","Not available");
+                                        else if (fourdour.contains(type)){
 
-                                            for (int k = 0; k < filterdata2.size(); k++) {
+                                            Log.e("exist", "exist");
 
-                                                //String s = filterdata2.get(k).item;
-                                                if (filterdata2.get(k).item.contains(type)) {
-                                                    //  String oldqty = filterdata2.get(k).noofpieces;
-                                                    Log.e(filterdata2.get(k).noofpieces, quantity);
-                                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(filterdata2.get(k).noofpieces);
+
+                                            for (int i=0;i<filterdata2.size();i++){
+
+
+                                                if (filterdata2.get(i).item.equalsIgnoreCase(type)){
+
+
+                                                    Float foo1 = Float.parseFloat(quantity);
                                                     Float fo1 = Float.parseFloat(price);
-                                                    Float xy = foo1 * fo1;
-                                                    String amount2 = Float.toString(xy);
-                                                    String newqty = Float.toString(foo1);
-                                                    Log.e("exist", "exist");
-                                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
+                                                    Float dd = Float.parseFloat(filterdata2.get(i).amt);
+                                                    Float dd2 = Float.parseFloat(filterdata2.get(i).noofpieces);
 
-                                                    //  filterdata2.remove(k);
-                                                    filterdata2.add(k, ss);
+                                                    s = (foo1+dd2)*fo1;
 
-                                                    AddtoList();
+                                                    float sss = foo1+dd2;
+
+
+
+
+
+
+                                                    DataFish2 ss = new DataFish2(type, String.valueOf(Math.round(sss)), price, String.valueOf(s),idd);
+                                                    filterdata2.set(i,ss);
+                                                    break;
+
 
                                                 }
-//                                                else{
-//
-//                                                    Float foo = Float.parseFloat(quantity);
-//                                                    Float fo2 = Float.parseFloat(price);
-//                                                    Float x = foo * fo2;
-//                                                    amount =Float.toString(x);
-//                                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
-//                                                    filterdata2.set(k,ss);
-//
-//                                                    AddtoList();
-//                                                    break;
-//                                                }
                                             }
 
-
                                         }
-                                        else  {
 
+                                        else {
+
+                                            fourdour.add(type);
+
+                                            Log.e("noexist", "noexist");
 
                                             Float foo = Float.parseFloat(quantity);
                                             Float fo2 = Float.parseFloat(price);
                                             Float x = foo * fo2;
                                             amount =Float.toString(x);
-                                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
+                                            Log.e(type,quantity+price+amount);
+                                            DataFish2 ss = new DataFish2(type, quantity, price, amount,idd);
                                             filterdata2.add(ss);
                                             AddtoList();
+
+
                                         }
+
+                                        AddtoList();
+
+
 
                                     }
 
@@ -312,13 +483,30 @@ public class Pickup extends AppCompatActivity {
 
     }
 
+    private void setspinner() {
 
+        adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_item,items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
 
 
     public class DataFish {
-        public String Type;
-        public String cost;
-        public ArrayList<String> spinlist;
+
+
+        public String Did;
+        public String Dcategory;
+        public String Dprice;
+
+
+        public DataFish(String did, String dcategory, String dprice) {
+            Did = did;
+            Dcategory = dcategory;
+            Dprice = dprice;
+        }
+
+
 
     }
 
@@ -327,14 +515,16 @@ public class Pickup extends AppCompatActivity {
         public String noofpieces;
         public String cost;
         public String amt;
+        public String id;
 
 
-        public DataFish2(String item,String noofpieces,String cost,String amt){
+        public DataFish2(String item,String noofpieces,String cost,String amt,String id){
 
             this.item = item;
             this.noofpieces = noofpieces;
             this.cost = cost;
             this.amt = amt;
+            this.id = id;
         }
 
     }
@@ -353,11 +543,15 @@ public class Pickup extends AppCompatActivity {
             Float dd = Float.parseFloat(filterdata2.get(i).amt);
             sum += dd;
         }
-        Log.e("rererer", String.valueOf(sum));
-        //   btmamt.setText("Sub Total = " +String.valueOf(sum));
-        double s =  ((18/100) *sum)+sum;
-        btmtotal.setText("Total = "+getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
 
+        //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+
+        s =  ((0.0/100) *sum)+sum;
+        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.format("%.2f",s)+"(Inc of all taxes)");
+
+        pay.setVisibility(View.VISIBLE);
+        btmtotal.setVisibility(View.VISIBLE);
+        tableLayout.setVisibility(View.VISIBLE);
         pay.setVisibility(View.VISIBLE);
 
 
@@ -408,7 +602,14 @@ public class Pickup extends AppCompatActivity {
                 public void onClick(View v) {
                     //                   Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
 
+//
+//                    prize.add(current.cost);
+//                    items.add(current.item);
+//                    setspinner();
+
                     filterdata2.remove(position);
+                    fourdour.remove(current.item);
+
 
                     //  dd.add(current.item);
                     //                  tarif.add("fsd","rtt","trer");
@@ -428,8 +629,8 @@ public class Pickup extends AppCompatActivity {
                     Log.e("rererer", String.valueOf(sum));
                     //btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                    s =  ((18.0/100) *sum)+sum;
-                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee) +String.valueOf(s)+"(Inc of all taxes)");
+                   double s =  ((0.0/100) *sum)+sum;
+                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee) +String.format("%.2f",s)+"(Inc of all taxes)");
                 }
             });
             myHolder.plus.setOnClickListener(new View.OnClickListener() {
@@ -461,7 +662,7 @@ public class Pickup extends AppCompatActivity {
                                         String suu =Float.toString(x);
 
 
-                                        filterdata2.set(position, new DataFish2(current.item,YouEditTextValue,current.cost,suu));
+                                        filterdata2.set(position, new DataFish2(current.item,YouEditTextValue,current.cost,suu,current.id));
                                         Adapter2 = new AdapterFish2(Pickup.this, filterdata2);
                                         Adapter2.setHasStableIds(false);
                                         mRVFishPrice2.setAdapter(Adapter2);
@@ -476,9 +677,9 @@ public class Pickup extends AppCompatActivity {
 
                                         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
-                                        double s =  ((18.0/100) *sum)+sum;
-                                        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
-                                        Log.e("rererer", String.valueOf(s));
+                                        double s =  ((0.0/100) *sum)+sum;
+                                        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.format("%.2f",s)+"(Inc of all taxes)");
+                                        Log.e("rererer", String.format("%.2f",s));
                                     } catch (NumberFormatException e) {
                                         Toast.makeText(context, "Enter only numbers", Toast.LENGTH_SHORT).show();
                                     }
@@ -533,11 +734,8 @@ public class Pickup extends AppCompatActivity {
     }
 
     private void Paydata() {
-
         final OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject postdat = new JSONObject();
-
-
         JSONArray itemType = new JSONArray();
         JSONArray unitPrice = new JSONArray();
         JSONArray subTotal = new JSONArray();
@@ -555,24 +753,29 @@ public class Pickup extends AppCompatActivity {
 
             subTotal.put(filterdata2.get(i).amt);
         }
+        float garmentscount = 0;
         for (int i=0;i<filterdata2.size();i++){
 
+
+            float foo = Float.parseFloat(filterdata2.get(i).noofpieces);
+            garmentscount+= foo;
             quantity.put(filterdata2.get(i).noofpieces);
         }
-
         String timeStamp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
         try {
-            postdat.put("status", "PICKUP-CONFIRMED");
-            postdat.put("gstPercentage", "18%");
+            //  postdat.put("status", "PICKUP-CONFIRMED");
             postdat.put("customerId",tinyDB.getString("custid"));
+            postdat.put("jobId",tinyDB.getString("jobid"));
+            postdat.put("jobOrderDateTime",timeStamp2);
+            postdat.put("gstPercentage", "0");
             postdat.put("grandTotal",String.valueOf(s));
-            postdat.put("invoiceDateTime",timeStamp2);
-            postdat.put("jobid",tinyDB.getString("jobid"));
+            postdat.put("garmentsCount",garmentscount);
             postdat.put("itemType",itemType);
             postdat.put("unitPrice",unitPrice);
-            postdat.put("subTotal",subTotal);
             postdat.put("quantity",quantity);
+            postdat.put("subTotal",subTotal);
+
 
         } catch(JSONException e){
             // TODO Auto-generated catch block
@@ -582,7 +785,7 @@ public class Pickup extends AppCompatActivity {
 
         Log.e("array", String.valueOf(postdat));
         final Request request = new Request.Builder()
-                .url("http://52.172.191.222/isthree/index.php/services/deliveryInvoice")
+                .url("http://52.172.191.222/isthree/index.php/services/createJobOrder")
                 .post(body)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -610,8 +813,8 @@ public class Pickup extends AppCompatActivity {
                             public void onClick(View v) {
                                 openDialog.dismiss();
 
-//                                                //                                          Toast.makeText(Pickup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Pickup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
 //                                                startActivity(intent);
                             }
                         });
@@ -628,92 +831,76 @@ public class Pickup extends AppCompatActivity {
             public void onResponse(Response response) throws IOException {
 
                 mMessage = response.body().string();
+
+                Log.e("result",mMessage);
+
+//                Log.e("resstsy",response.body().string());
                 if (response.isSuccessful()){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             JSONObject jsonResponse = null;
                             try {
+                                jsonResponse = new JSONObject(mMessage);
 
-                                JSONArray itemArray = new JSONArray(mMessage);
-                                for (int i = 0; i < itemArray.length(); i++) {
-                                    // int value=itemArray.getInt(i);
-                                    String sss = itemArray.getString(i);
-                                    jsonResponse = new JSONObject(sss);
+                                if (jsonResponse.getString("statusCode").equalsIgnoreCase("0")){
 
-                                    jsonResponse.getString("status");
-                                    jsonResponse.getString("statusCode");
+                                    final Dialog openDialog = new Dialog(Pickup.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("Error");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(jsonResponse.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                    dialogno.setVisibility(View.GONE);
 
-                                    if (jsonResponse.getString("statusCode").equalsIgnoreCase("0")){
+                                    dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
 
-                                        final Dialog openDialog = new Dialog(Pickup.this);
-                                        openDialog.setContentView(R.layout.alert);
-                                        openDialog.setTitle("Error");
-                                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                                        dialogTextContent.setText(jsonResponse.getString("status"));
-                                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
-                                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
-                                        dialogno.setVisibility(View.GONE);
-
-                                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                openDialog.dismiss();
-
-//                                                //                                          Toast.makeText(Pickup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-//                                                Intent intent = new Intent(Pickup.this,Dashpage.class);
+//                                                //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+//                                                Intent intent = new Intent(Puckup.this,Dashpage.class);
 //                                                startActivity(intent);
-                                            }
-                                        });
+                                        }
+                                    });
 
-                                        openDialog.show();
-                                    }
-
-                                    else if (jsonResponse.getString("statusCode").equalsIgnoreCase("1")){
-
-
-
-                                        final Dialog openDialog = new Dialog(Pickup.this);
-                                        openDialog.setContentView(R.layout.alert);
-                                        openDialog.setTitle("Success");
-                                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
-                                        dialogTextContent.setText(jsonResponse.getString("status"));
-                                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
-                                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
-                                        dialogno.setVisibility(View.GONE);
-
-                                        dialogCloseButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                openDialog.dismiss();
-
-                                                //                                          Toast.makeText(Pickup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(Pickup.this,Dashpage.class);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        //
-                                        Log.e("json",sss);
-
-                                        openDialog.show();
-                                    }
-
-
-
+                                    openDialog.show();
                                 }
 
+                                else if (jsonResponse.getString("statusCode").equalsIgnoreCase("1")){
 
+
+
+                                    final Dialog openDialog = new Dialog(Pickup.this);
+                                    openDialog.setContentView(R.layout.alert);
+                                    openDialog.setTitle("Success");
+                                    TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                                    dialogTextContent.setText(jsonResponse.getString("status"));
+                                    ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
+                                    Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                                    Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                                    dialogno.setVisibility(View.GONE);
+
+                                    dialogCloseButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            openDialog.dismiss();
+
+                                            //                                          Toast.makeText(Puckup.this, jsonResponse.getString("status"), Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(Pickup.this,SummaryReport.class);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    //
+                                    //  Log.e("json",sss);
+
+                                    openDialog.show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-
-
-
-
-
 
                         }
                     });

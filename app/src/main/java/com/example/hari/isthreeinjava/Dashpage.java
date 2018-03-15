@@ -192,7 +192,7 @@ public class Dashpage extends AppCompatActivity {
                                 else if (s.equalsIgnoreCase("1")){
                                     tinydb.putString("jobid",json.getString("jobid"));
 
-                                            Intent intent = new Intent(Dashpage.this, Puckup.class);
+                                            Intent intent = new Intent(Dashpage.this, Pickup.class);
                                             startActivity(intent);
 
 
@@ -364,6 +364,10 @@ public class Dashpage extends AppCompatActivity {
 
 
             Intent intent = new Intent(Dashpage.this,Signin.class);
+
+            tinydb.putString("custid","");
+
+//            tinydb.clear();
             startActivity(intent);
 
 

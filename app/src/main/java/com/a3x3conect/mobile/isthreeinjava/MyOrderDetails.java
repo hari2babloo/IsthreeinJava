@@ -77,11 +77,11 @@ public class MyOrderDetails extends AppCompatActivity {
         jobOrder.get(position).getDate();
 
 
-        jobid.setText("JOB ORDER       :" +jobOrder.get(position).getJobid());
-        date.setText("DATE                    : " +jobOrder.get(position).getDate());
-        status.setText("STATUS              :"  +jobOrder.get(position).getDeliveryStatus());
-        grantotal.setText("GRAND TOTAL :"   +jobOrder.get(position).getGrandTotal());
-        custid.setText("Customer ID:            " +jobOrder.get(position).getCustomerId());
+        jobid.setText(jobOrder.get(position).getJobid());
+        date.setText(jobOrder.get(position).getDate());
+        status.setText(jobOrder.get(position).getDeliveryStatus());
+        grantotal.setText(jobOrder.get(position).getGrandTotal());
+        custid.setText(jobOrder.get(position).getCustomerId());
 
 
 

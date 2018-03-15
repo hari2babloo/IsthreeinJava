@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:layout_margin="8dp"
-    android:background="@color/cardview_light_background"
-    android:orientation="vertical"
     tools:context=".Puckup">
 
     <LinearLayout
@@ -15,12 +12,48 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fishPriceList"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select your Item " />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="150dp"
+                android:layout_height="50dp" />
+
+            <EditText
+                android:id="@+id/qty"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:hint="Quantity"
+                android:inputType="number"
+                android:keyboardNavigationCluster="false" />
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:background="@color/bluee"
+                android:text="Add"
+                android:textColor="@color/cardview_light_background" />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,68 +116,76 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fishPriceList2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_gravity="top"
-            android:layout_margin="5dp"></android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fishPriceList2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:layout_margin="5dp"></android.support.v7.widget.RecyclerView>
 
-        android:orientation="vertical">
+        </LinearLayout>
 
-        <TableLayout
-            android:id="@+id/tabl"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false">
+            android:layout_alignParentBottom="true"
 
+            android:orientation="vertical">
 
-            <TableRow
+            <TableLayout
+                android:id="@+id/tabl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center">
+                android:nestedScrollingEnabled="false">
 
 
-                <TextView
-                    android:id="@+id/btmamt"
-                    android:layout_width="wrap_content"
+                <TableRow
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp" />
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center">
 
-            </TableRow>
 
-            <TableRow
+                    <TextView
+                        android:id="@+id/btmamt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+
+                    <TextView
+                        android:id="@+id/btmtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:text="Total"
+                        android:textColor="@color/bluee"
+                        android:textSize="15sp" />
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/pay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
+                android:layout_height="35dp"
+                android:background="@color/bluee"
+                android:text="Submit"
+                android:textColor="@color/cardview_light_background" />
 
-
-                <TextView
-                    android:id="@+id/btmtotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:text="Total"
-                    android:textColor="@color/bluee"
-                    android:textSize="15sp" />
-            </TableRow>
-
-        </TableLayout>
-
-        <Button
-            android:id="@+id/pay"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@color/bluee"
-            android:text="Submit"
-            android:textColor="@color/cardview_light_background" />
+        </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+</ScrollView>

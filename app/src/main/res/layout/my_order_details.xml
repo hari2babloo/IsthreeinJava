@@ -19,52 +19,135 @@
         android:gravity="center"
         android:text="Order Details"
         android:textColor="@color/bluee"
-        android:textSize="15sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/jobid"
-        android:layout_width="match_parent"
+    <TableRow
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Job Id"
-        android:textColor="@color/bluee"
-        android:textSize="12sp" />
+        android:layout_width="match_parent"
+        >
 
-    <TextView
-        android:id="@+id/custid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Customer ID"
-        android:textColor="@color/bluee"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/jobid2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Job Id"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Date"
-        android:textColor="@color/bluee"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/jobid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Job Id"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/delstatus"
-        android:layout_width="match_parent"
+    </TableRow>
+    <TableRow
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Delivery Status"
-        android:textColor="@color/bluee"
-        android:textSize="12sp" />
+        android:layout_width="match_parent"
+        >
 
-    <TextView
-        android:id="@+id/grandtotal"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/custid2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Customer ID"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/custid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Customer ID"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+    </TableRow>
+    <TableRow
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Grand Total"
-        android:textColor="@color/bluee"
-        android:textSize="12sp" />
+        android:layout_width="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/date2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Date"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Date"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+
+
+        <TextView
+            android:id="@+id/delstatus2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Delivery Status"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/delstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delivery Status"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/grandtotal2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Grand Total"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/grandtotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Grand Total"
+            android:textColor="@color/bluee"
+            android:textSize="12sp" />
+
+    </TableRow>
+
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"

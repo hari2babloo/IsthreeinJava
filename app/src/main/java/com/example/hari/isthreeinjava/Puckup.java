@@ -67,48 +67,66 @@ public class Puckup extends AppCompatActivity {
 
     JSONArray jsonArray;
     ListView plist;
-     List<Tariff> tarif,tarrif2;
-    RecyclerView mRVFishPrice,mRVFishPrice2;
-    private AdapterFish Adapter;
+    List<Tariff> tarif, tarrif2;
+    RecyclerView mRVFishPrice, mRVFishPrice2;
+    ArrayAdapter<String> adapter;
     private AdapterFish2 Adapter2;
-    List<DataFish> filterdata=new ArrayList<DataFish>();
-    List<DataFish2> filterdata2=new ArrayList<DataFish2>();
-     String mMessage,mMessage2;
-     Button pay,add;
-     TinyDB tinyDB;
-     Spinner spinner;
-     EditText qty;
+    List<DataFish2> filterdata2 = new ArrayList<DataFish2>();
+  
+    ArrayList<String> items = new ArrayList<>();
+    ArrayList<String> prize = new ArrayList<>();
+    ArrayList<String> items2 = new ArrayList<>();
+    ArrayList<String> prize2 = new ArrayList<>();
 
-     ProgressDialog pd;
-    double s,q;
-    DataFish data = new DataFish();
-    String price,type,quantity,amount;
-    TextView btmamt,btmtotal;
+
+    String mMessage, mMessage2;
+    Button pay, add;
+    TinyDB tinyDB;
+    Spinner spinner;
+    EditText qty;
+
+    ProgressDialog pd;
+    double s;
+    String price, type, quantity, amount;
+    TextView btmamt, btmtotal;
     TableLayout tableLayout;
     final ArrayList<String> dd = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.puckup);
         tinyDB = new TinyDB(this);
-        pay = (Button)findViewById(R.id.pay);
-        mRVFishPrice = (RecyclerView)findViewById(R.id.fishPriceList);
-        mRVFishPrice2 = (RecyclerView)findViewById(R.id.fishPriceList2);
-        btmamt = (TextView)findViewById(R.id.btmamt);
-        tableLayout = (TableLayout)findViewById(R.id.tabl);
+        pay = (Button) findViewById(R.id.pay);
+        mRVFishPrice = (RecyclerView) findViewById(R.id.fishPriceList);
+        mRVFishPrice2 = (RecyclerView) findViewById(R.id.fishPriceList2);
+        btmamt = (TextView) findViewById(R.id.btmamt);
+        tableLayout = (TableLayout) findViewById(R.id.tabl);
         tableLayout.setVisibility(View.GONE);
-        btmtotal = (TextView)findViewById(R.id.btmtotal);
+        spinner  = (Spinner) findViewById(R.id.spinner);
+        qty = (EditText)findViewById(R.id.qty);
+        add = (Button)findViewById(R.id.add) ;
+        btmtotal = (TextView) findViewById(R.id.btmtotal);
         pay.setVisibility(View.GONE);
 
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Paydata();
+
+                if (filterdata2.isEmpty()){
+
+                    Toast.makeText(Puckup.this, "Please fill the form ", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    Paydata();
+                }
+
             }
         });
 
 
-       getjoborder();
+        getjoborder();
         GetFormData();
 
 
@@ -127,11 +145,11 @@ public class Puckup extends AppCompatActivity {
         try {
             postdat.put("customerId", tinyDB.getString("custid"));
             postdat.put("jobId", tinyDB.getString("jobid"));
-        } catch(JSONException e){
+        } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(MEDIA_TYPE,postdat.toString());
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdat.toString());
         final Request request = new Request.Builder()
                 .url("http://52.172.191.222/isthree/index.php/services/getJobOrder")
                 .post(body)
@@ -149,12 +167,12 @@ public class Puckup extends AppCompatActivity {
                         final Dialog openDialog = new Dialog(Puckup.this);
                         openDialog.setContentView(R.layout.alert);
                         openDialog.setTitle("No Internet");
-                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        TextView dialogTextContent = (TextView) openDialog.findViewById(R.id.dialog_text);
                         dialogTextContent.setText("Something Went Wrong");
-                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        ImageView dialogImage = (ImageView) openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button) openDialog.findViewById(R.id.dialog_button);
                         dialogCloseButton.setVisibility(View.GONE);
-                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                        Button dialogno = (Button) openDialog.findViewById(R.id.cancel);
                         dialogno.setText("OK");
                         dialogno.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -171,7 +189,7 @@ public class Puckup extends AppCompatActivity {
                 });
 
 
-              mMessage2 = e.getMessage().toString();
+                mMessage2 = e.getMessage().toString();
             }
 
             @Override
@@ -181,15 +199,15 @@ public class Puckup extends AppCompatActivity {
                 pd.cancel();
                 pd.dismiss();
                 mMessage2 = response.body().string();
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
 
-                            Log.e("Resy",mMessage2);
+                            Log.e("Resy", mMessage2);
                             // Toast.makeText(Signin.this, mMessage, Toast.LENGTH_SHORT).show();
-                         //   TraverseData();
+                            //   TraverseData();
 
                             try {
                                 JSONObject jsonObject = new JSONObject(mMessage2);
@@ -198,14 +216,13 @@ public class Puckup extends AppCompatActivity {
                                 Double jobid = jsonObject.optDouble("jobid");
 
 
-                                if (statuscode==0){
+                                if (statuscode == 0) {
 
 
-
- //                                   Toast.makeText(Puckup.this, "Please fill the form", Toast.LENGTH_SHORT).show();
+                                    //                                   Toast.makeText(Puckup.this, "Please fill the form", Toast.LENGTH_SHORT).show();
                                 }
 
-                                if (jobid>0){
+                                if (jobid > 0) {
 
                                     Log.e("jobid", String.valueOf(jsonObject.getDouble("jobid")));
 
@@ -213,7 +230,7 @@ public class Puckup extends AppCompatActivity {
                                     Intent intent = new Intent(Puckup.this, ExistingData.class);
                                     startActivity(intent);
 
- //                                   Toast.makeText(Puckup.this, "Form Data Exists", Toast.LENGTH_SHORT).show();
+                                    //                                   Toast.makeText(Puckup.this, "Form Data Exists", Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (JSONException e) {
@@ -222,8 +239,7 @@ public class Puckup extends AppCompatActivity {
 
                         }
                     });
-                }
-                else runOnUiThread(new Runnable() {
+                } else runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
@@ -235,12 +251,11 @@ public class Puckup extends AppCompatActivity {
     }
 
 
-
     private void GetFormData() {
 
-      final   OkHttpClient okHttpClient = new OkHttpClient();
+        final OkHttpClient okHttpClient = new OkHttpClient();
         JSONObject postdat = new JSONObject();
-        RequestBody body = RequestBody.create(MEDIA_TYPE,postdat.toString());
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdat.toString());
         final Request request = new Request.Builder()
                 .url("http://52.172.191.222/isthree/index.php/services/alltariff")
                 .get()
@@ -255,15 +270,14 @@ public class Puckup extends AppCompatActivity {
                         final Dialog openDialog = new Dialog(Puckup.this);
                         openDialog.setContentView(R.layout.alert);
                         openDialog.setTitle("No Internet");
-                        TextView dialogTextContent = (TextView)openDialog.findViewById(R.id.dialog_text);
+                        TextView dialogTextContent = (TextView) openDialog.findViewById(R.id.dialog_text);
                         dialogTextContent.setText("Looks like your device is offline");
-                        ImageView dialogImage = (ImageView)openDialog.findViewById(R.id.dialog_image);
-                        Button dialogCloseButton = (Button)openDialog.findViewById(R.id.dialog_button);
+                        ImageView dialogImage = (ImageView) openDialog.findViewById(R.id.dialog_image);
+                        Button dialogCloseButton = (Button) openDialog.findViewById(R.id.dialog_button);
                         dialogCloseButton.setVisibility(View.GONE);
-                        Button dialogno = (Button)openDialog.findViewById(R.id.cancel);
+                        Button dialogno = (Button) openDialog.findViewById(R.id.cancel);
 
                         dialogno.setText("OK");
-
 
 
                         dialogno.setOnClickListener(new View.OnClickListener() {
@@ -278,7 +292,6 @@ public class Puckup extends AppCompatActivity {
                         });
 
 
-
                         openDialog.show();
 
                     }
@@ -289,25 +302,126 @@ public class Puckup extends AppCompatActivity {
             public void onResponse(Response response) throws IOException {
 
                 mMessage = response.body().string();
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
-                            Gson gson = new Gson();
-                            Type listType = new TypeToken<List<Tariff>>(){}.getType();
-                            tarif = (List<Tariff>)  gson.fromJson(mMessage,listType);
+                            try {
+                                JSONArray array = new JSONArray(mMessage);
+                                for(int j = 0; j < array.length(); j++){
+
+                                    JSONObject json_data = array.getJSONObject(j);
+                                    items.add(json_data.getString("category"));
+                                    prize.add(json_data.getString("price"));
+                                    items2.add(json_data.getString("category"));
+                                    prize2.add(json_data.getString("price"));
+                                    Log.e("Dta",dd.toString());
+                                }
 
 
-                            for(int j = 0; j < tarif.size(); j++){
-                                tarif.get(j).getType();
-                                dd.add(tarif.get(j).getType());
+                                setspinner();
 
-
-                                Log.e("Dta",dd.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
 
-                            Displaylist();
+
+                            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    Object item = parent.getItemAtPosition(position);
+
+
+                                    price = prize.get(position);
+                                    type = items.get(position);
+
+
+
+
+                                }
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            add.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    quantity = qty.getText().toString();
+
+                                    if (TextUtils.isEmpty(quantity)){
+                                        Toast.makeText(Puckup.this, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
+                                        //myHolder.qty.setError("empty");
+                                    }
+                                    else if (quantity.equalsIgnoreCase("0")){
+                                        Toast.makeText(Puckup.this, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                    else if (items.isEmpty()){
+
+                                        Toast.makeText(getApplicationContext(), "List is Empty", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+
+                                        Log.e("previouslist", String.valueOf(items));
+
+                                        prize.remove(price);
+                                        items.remove(type);
+                                        Log.e("newlist", String.valueOf(items));
+                                        setspinner();
+                                        if (filterdata2.isEmpty()){
+                                            Float foo = Float.parseFloat(quantity);
+                                            Float fo2 = Float.parseFloat(price);
+                                            Float x = foo * fo2;
+                                            amount =Float.toString(x);
+                                            Log.e(type,quantity+price+amount);
+                                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
+                                            filterdata2.add(ss);
+                                            AddtoList();
+                                        }
+                                        else {
+
+                                            Log.e("NOt availavcle","Not available");
+//
+//                                            for (int k = 0; k < filterdata2.size(); k++) {
+//
+//                                                //String s = filterdata2.get(k).item;
+//                                                if (filterdata2.get(k).item.contains(type)) {
+                                                    //  String oldqty = filterdata2.get(k).noofpieces;
+                                      //              Log.e(filterdata2.get(k).noofpieces, quantity);
+                                                    Float foo1 = Float.parseFloat(quantity);
+                                                    Float fo1 = Float.parseFloat(price);
+                                                    Float xy = foo1 * fo1;
+                                                    String amount2 = Float.toString(xy);
+                                                    String newqty = Float.toString(foo1);
+                                                    Log.e("exist", "exist");
+                                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
+
+                                                    //  filterdata2.remove(k);
+                                                    filterdata2.add(ss);
+
+                                                    AddtoList();
+
+
+
+
+
+
+                                        }
+
+
+                                    }
+
+
+                                }
+                            });
+
+                            //  Displaylist();
 
                         }
                     });
@@ -322,52 +436,47 @@ public class Puckup extends AppCompatActivity {
         });
 
 
+
     }
-
-    private void Displaylist() {
-
-
-        try {
-            JSONArray jsonArray = new JSONArray(mMessage);
-            for (int i = 0; i < jsonArray.length(); i++) {
+    private void setspinner() {
 
 
 
-//                JSONObject json_data = jsonArray.getJSONObject(i);
+            adapter = new ArrayAdapter<String>(getApplicationContext(),
+                    android.R.layout.simple_spinner_item,items);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
 
-//                data.cost = (json_data.getString("price"));
-//                data.Type = (json_data.getString("Type"));
-
-
-
-
-      //          Log.e("fdsfds",json_data.getString("Type")+json_data.getString("price"));
-            }
-            data.spinlist = (dd);
-            filterdata.add(data);
-
-
-            Adapter = new AdapterFish(Puckup.this, filterdata);
-            Adapter.setHasStableIds(false);
-            mRVFishPrice.setAdapter(Adapter);
-            mRVFishPrice.setHasFixedSize(false);
-            //                          mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
-            //                          mRVFishPrice.setLayoutManager(new GridLayoutManager(MainActivity.this,1));
-            mRVFishPrice.setLayoutManager(new LinearLayoutManager(Puckup.this,LinearLayoutManager.VERTICAL,true));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-//                            dataModels.add((prizes) gson.fromJson(mMessage,listType));
 
     }
 
+//    private void Displaylist() {
+//
+//
+//
+//            data.spinlist = (dd);
+//            filterdata.add(data);
+//
+//
+//            Adapter = new AdapterFish(Puckup.this, filterdata);
+//            Adapter.setHasStableIds(false);
+//            mRVFishPrice.setAdapter(Adapter);
+//            mRVFishPrice.setHasFixedSize(false);
+//            //                          mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
+//            //                          mRVFishPrice.setLayoutManager(new GridLayoutManager(MainActivity.this,1));
+//            mRVFishPrice.setLayoutManager(new LinearLayoutManager(Puckup.this, LinearLayoutManager.VERTICAL, true));
+//
+////                            dataModels.add((prizes) gson.fromJson(mMessage,listType));
+//
+//    }
 
-    public class DataFish {
-        public String Type;
-        public String cost;
-        public ArrayList<String> spinlist;
 
-    }
+//    public class DataFish {
+//        public String Type;
+//        public String cost;
+//        public ArrayList<String> spinlist;
+//
+//    }
 
     public class DataFish2 {
         public String item;
@@ -375,8 +484,8 @@ public class Puckup extends AppCompatActivity {
         public String cost;
         public String amt;
 
-
-        public DataFish2(String item,String noofpieces,String cost,String amt){
+//
+        public DataFish2(String item, String noofpieces, String cost, String amt) {
 
             this.item = item;
             this.noofpieces = noofpieces;
@@ -385,230 +494,276 @@ public class Puckup extends AppCompatActivity {
         }
 
     }
-    public class AdapterFish extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        List<DataFish> data = Collections.emptyList();
-        int currentPos = 0;
-        private Context context;
-        private LayoutInflater inflater;
 
-        // create constructor to innitilize context and data sent from MainActivity
-        public AdapterFish(Context context, List<DataFish> data) {
-            this.context = context;
-            inflater = LayoutInflater.from(context);
-            this.data = data;
-
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.row, parent, false);
-            final MyHolder holder = new MyHolder(view);
-         //   Adapter.notifyDataSetChanged();
-            return holder;
-        }
-
-
-        // Bind data
-        @Override
-        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-
-            // Get current position of item in recyclerview to bind data and assign values from list
-            final MyHolder myHolder = (MyHolder) holder;
-            //   mRVFishPrice.scrollToPosition(position);
-            //    holder.setIsRecyclable(true);
-            final DataFish current = data.get(position);
-            //  holder.getLayoutPosition();
-            //    setHasStableIds(true);
-
-            ;
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                    android.R.layout.simple_spinner_item, current.spinlist);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            myHolder.spinner.setAdapter(adapter);
-            myHolder.qty.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    quantity = myHolder.qty.getText().toString();
-
-                    //                   Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-            myHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Object item = parent.getItemAtPosition(position);
-                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
-                    price = tarif.get(position).getPrice();
-                    type = tarif.get(position).getType();
-
-//                    Toast.makeText(context,price, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-
-            myHolder.plus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    if (TextUtils.isEmpty(quantity)) {
-                        Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
-                        //myHolder.qty.setError("empty");
-                    } else if (quantity.equalsIgnoreCase("0")) {
-                        Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
-
-                    } else {
-
-
-
-                        Integer poss = 0;
-                        if (filterdata2.isEmpty()) {
-                            Float foo = Float.parseFloat(quantity);
-                            Float fo2 = Float.parseFloat(price);
-                            Float x = foo * fo2;
-                            amount = Float.toString(x);
-
-                            Log.e(type, quantity + price + amount);
-                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
-                            filterdata2.add(ss);
-                            AddtoList();
-                        } else if (filterdata2.size() > 0) {
-
-
-                             for (int k = 0; k < filterdata2.size(); k++) {
-                                //String s = filterdata2.get(k).item;
-                                 if (filterdata2.get(k).item.equalsIgnoreCase(type)) {
-
-
-                                     Log.e("selected value",type);
-                                     Log.e("Matched Value",filterdata2.get(k).item);
-                                    String oldqty = filterdata2.get(k).noofpieces;
-
-                                    Log.e(oldqty, quantity);
-
-                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(oldqty);
-                                    Float fo1 = Float.parseFloat(price);
-                                    Float xy = foo1 * fo1;
-                                    String amount2 = Float.toString(xy);
-
-                                    String newqty = Float.toString(foo1);
-
-                                    Log.e("exist", "exist");
-
-
-                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
-
-                                    filterdata2.set(k, ss);
-                                    break;
-
-                                }
-
-                                 else {
-
-                                    Float foo = Float.parseFloat(quantity);
-                                    Float fo2 = Float.parseFloat(price);
-                                    Float x = foo * fo2;
-                                    amount =Float.toString(x);
-                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
-                                    filterdata2.add(ss);
-                                    break;
-                                }
-
-
-
-                            }
-
-
-
-//                                    String oldqty = filterdata2.get(k).noofpieces;
+//    public class AdapterFish extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//        List<DataFish> data = Collections.emptyList();
+//        int currentPos = 0;
+//        private Context context;
+//        private LayoutInflater inflater;
 //
-//                                    Log.e(oldqty, quantity);
+//        // create constructor to innitilize context and data sent from MainActivity
+//        public AdapterFish(Context context, List<DataFish> data) {
+//            this.context = context;
+//            inflater = LayoutInflater.from(context);
+//            this.data = data;
 //
-//                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(oldqty);
-//                                    Float fo1 = Float.parseFloat(price);
-//                                    Float xy = foo1 * fo1;
-//                                    String amount2 = Float.toString(xy);
+//        }
 //
-//                                    String newqty = Float.toString(foo1);
-//
-//                                    Log.e("exist", "exist");
+//        @Override
+//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//            View view = inflater.inflate(R.layout.row, parent, false);
+//            final MyHolder holder = new MyHolder(view);
+//            //   Adapter.notifyDataSetChanged();
+//            return holder;
+//        }
 //
 //
-//                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
+//        // Bind data
+//        @Override
+//        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+//
+//            // Get current position of item in recyclerview to bind data and assign values from list
+//            final MyHolder myHolder = (MyHolder) holder;
+//            //   mRVFishPrice.scrollToPosition(position);
+//            //    holder.setIsRecyclable(true);
+//            final DataFish current = data.get(position);
+//            //  holder.getLayoutPosition();
+//            //    setHasStableIds(true);
+//
+//            ;
+//
+//            adapter = new ArrayAdapter<String>(getApplicationContext(),
+//                    android.R.layout.simple_spinner_item, current.spinlist);
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//            myHolder.spinner.setAdapter(adapter);
+//            myHolder.qty.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    quantity = myHolder.qty.getText().toString();
+//
+//                    //                   Toast.makeText(context, quantity, Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//
+//                }
+//            });
+//            myHolder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                    Object item = parent.getItemAtPosition(position);
+//                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
+//                    price = tarif.get(position).getPrice();
+//                    type = tarif.get(position).getType();
+//
+////                    Toast.makeText(context,price, Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {
+//                }
+//            });
+//
+//            myHolder.plus.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//
+//                    if (TextUtils.isEmpty(quantity)) {
+//                        Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
+//                        //myHolder.qty.setError("empty");
+//                    } else if (quantity.equalsIgnoreCase("0")) {
+//                        Toast.makeText(context, "Please Enter Quantity", Toast.LENGTH_SHORT).show();
+//
+//                    } else {
 //
 //
 //
-//                                    filterdata2.set(k, ss);
+//                        ss.cost = "";
+//                        if (!type2.contains(type)) {
 //
-//                                    break;
-
-                        }
+//                            ss.item = type;
+//                            ss.amt = amount;
+//                            ss.noofpieces = quantity;
+//                            ss.cost = price;
 //
-//                                else if (!filterdata2.get(k).item.equalsIgnoreCase(type)){
+//                            //                             DataFish2 ss = new DataFish2(type, "5", "5", "5");
+//                            filterdata2.add(ss);
 //
-//                                    Float foo = Float.parseFloat(quantity);
-//                                    Float fo2 = Float.parseFloat(price);
-//                                    Float x = foo * fo2;
-//                                    amount =Float.toString(x);
-//                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
-//                                    filterdata2.add(ss);
-//                                    break;
-//                                }
-                    }
-
-
-                    Log.e("array", String.valueOf(filterdata2));
-                    AddtoList();
-
-                }
-
-
-            });
-
-        }
-
-
-
-        // return total item from List
-        @Override
-        public int getItemCount() {
-            return data.size();
-        }
-
-
-        class MyHolder extends RecyclerView.ViewHolder {
-          EditText qty;
-            Spinner spinner;
-            Button plus;
-
-            // create constructor to get widget reference
-            public MyHolder(View itemView) {
-                super(itemView);
-                qty = (EditText)itemView.findViewById(R.id.qty);
-                spinner = (Spinner)itemView.findViewById(R.id.spinner);
-                plus = (Button)itemView.findViewById(R.id.plus);
-
-                //  id= (TextView)itemView.findViewById(R.id.id);
-            }
-
-        }
-
-    }
+//
+//
+//                        }
+//
+//                        else {
+//
+//                            for (int k = 0; k < type2.size(); k++) {
+//
+//                                //  type2.set(k,type);
+//
+//
+//                                //   DataFish2 ss = new DataFish2(type2.get(k), "5", price, "5");
+//
+//                                ss.item = type2.get(k);
+//                                ss.amt = amount;
+//                                ss.noofpieces = quantity;
+//                                ss.cost = price;
+//                                filterdata2.set(k, ss);
+//
+//                            }
+//
+//
+//                        }
+//
+//
+//                        AddtoList();
+//
+//
+//                    }
+//
+////                        Integer poss = 0;
+////                        if (filterdata2.isEmpty()) {
+////                            Float foo = Float.parseFloat(quantity);
+////                            Float fo2 = Float.parseFloat(price);
+////                            Float x = foo * fo2;
+////                            amount = Float.toString(x);
+////
+////                            Log.e(type, quantity + price + amount);
+////                            DataFish2 ss = new DataFish2(type, quantity, price, amount);
+////                            filterdata2.add(ss);
+////                            AddtoList();
+////                        }
+////
+////                        else  {
+////
+////
+////                            for (int k = 0; k < filterdata2.size(); k++) {
+////                                //String s = filterdata2.get(k).item;
+////                                if (filterdata2.get(k).item == type) {
+////
+////
+////                                    Log.e("selected value", type);
+////                                    Log.e("Matched Value", filterdata2.get(k).item);
+////                                    String oldqty = filterdata2.get(k).noofpieces;
+////
+////                                    Log.e(oldqty, quantity);
+////
+////                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(oldqty);
+////                                    Float fo1 = Float.parseFloat(price);
+////                                    Float xy = foo1 * fo1;
+////                                    String amount2 = Float.toString(xy);
+////
+////                                    String newqty = Float.toString(foo1);
+////
+////                                    Log.e("exist", "exist");
+////
+////
+////                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
+////
+////                                    filterdata2.set(k, ss);
+////
+////                                    break;
+////
+////
+////                                }
+////
+////                                else {
+////
+////
+////                                        Float foo = Float.parseFloat(quantity);
+////                                        Float fo2 = Float.parseFloat(price);
+////                                        Float x = foo * fo2;
+////                                        amount = Float.toString(x);
+////                                        DataFish2 ss = new DataFish2(type, quantity, price, amount);
+////                                        filterdata2.add(ss);
+////                                        break;
+////
+////
+////                                }
+////                            }
+////
+////                        }
+//
+//
+//                }
+//
+//
+////                                    String oldqty = filterdata2.get(k).noofpieces;
+////
+////                                    Log.e(oldqty, quantity);
+////
+////                                    Float foo1 = Float.parseFloat(quantity) + Float.parseFloat(oldqty);
+////                                    Float fo1 = Float.parseFloat(price);
+////                                    Float xy = foo1 * fo1;
+////                                    String amount2 = Float.toString(xy);
+////
+////                                    String newqty = Float.toString(foo1);
+////
+////                                    Log.e("exist", "exist");
+////
+////
+////                                    DataFish2 ss = new DataFish2(filterdata2.get(k).item, newqty, price, amount2);
+////
+////
+////
+////                                    filterdata2.set(k, ss);
+////
+////                                    break;
+//
+//
+////
+////                                else if (!filterdata2.get(k).item.equalsIgnoreCase(type)){
+////
+////                                    Float foo = Float.parseFloat(quantity);
+////                                    Float fo2 = Float.parseFloat(price);
+////                                    Float x = foo * fo2;
+////                                    amount =Float.toString(x);
+////                                    DataFish2 ss = new DataFish2(type, quantity, price, amount);
+////                                    filterdata2.add(ss);
+////                                    break;
+////                                }
+//            });
+//
+//
+////                    Log.e("array", String.valueOf(filterdata2));
+//
+//
+//        }
+//
+//
+//
+//
+//        // return total item from List
+//        @Override
+//        public int getItemCount() {
+//            return data.size();
+//        }
+//
+//
+//        class MyHolder extends RecyclerView.ViewHolder {
+//          EditText qty;
+//            Spinner spinner;
+//            Button plus;
+//
+//            // create constructor to get widget reference
+//            public MyHolder(View itemView) {
+//                super(itemView);
+//                qty = (EditText)itemView.findViewById(R.id.qty);
+//                spinner = (Spinner)itemView.findViewById(R.id.spinner);
+//                plus = (Button)itemView.findViewById(R.id.plus);
+//
+//                //  id= (TextView)itemView.findViewById(R.id.id);
+//            }
+//
+//        }
+//
+//    }
     private void AddtoList() {
 
        // Log.e("ononcontains","oncontains");          // Log.e(u,u);
@@ -627,7 +782,7 @@ public class Puckup extends AppCompatActivity {
         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
 
         s =  ((18.0/100) *sum)+sum;
-        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.format("%.2f",s)+"(Inc of all taxes)");
         tableLayout.setVisibility(View.VISIBLE);
 
         btmtotal.setVisibility(View.VISIBLE);
@@ -679,13 +834,18 @@ public class Puckup extends AppCompatActivity {
                 public void onClick(View v) {
  //                   Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
 
+                    prize.add(current.cost);
+                    items.add(current.item);
+                    setspinner();
+
                     filterdata2.remove(position);
 
-                  //  dd.add(current.item);
- //                  tarif.add("fsd","rtt","trer");
-   //                 Adapter.notifyDataSetChanged();
 
-                    Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
+                    //  dd.add(current.item);
+                    //                  tarif.add("fsd","rtt","trer");
+                    //                 Adapter.notifyDataSetChanged();
+
+                    Adapter2 = new Puckup.AdapterFish2(Puckup.this, filterdata2);
                     Adapter2.setHasStableIds(false);
                     mRVFishPrice2.setAdapter(Adapter2);
                     mRVFishPrice2.setHasFixedSize(false);
@@ -696,14 +856,14 @@ public class Puckup extends AppCompatActivity {
                         Float dd = Float.parseFloat(filterdata2.get(i).amt);
                         sum += dd;
                     }
-
-                    //  btmamt.setText("Sub Total = " +String.valueOf(sum));
+                    Log.e("rererer", String.valueOf(sum));
+                    //btmamt.setText("Sub Total = " +String.valueOf(sum));
 
                     s =  ((18.0/100) *sum)+sum;
-                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+                    btmtotal.setText("Total = " +getResources().getString(R.string.rupee) +String.format("%.2f",s)+"(Inc of all taxes)");
                 }
             });
-            myHolder.plus.setOnClickListener(new View.OnClickListener() {
+                    myHolder.plus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -732,8 +892,8 @@ public class Puckup extends AppCompatActivity {
                                         String suu =Float.toString(x);
 
 
-                                        filterdata2.set(position, new DataFish2(current.item,YouEditTextValue,current.cost,suu));
-                                        Adapter2 = new AdapterFish2(Puckup.this, filterdata2);
+                                        filterdata2.set(position, new Puckup.DataFish2(current.item,YouEditTextValue,current.cost,suu));
+                                        Adapter2 = new Puckup.AdapterFish2(Puckup.this, filterdata2);
                                         Adapter2.setHasStableIds(false);
                                         mRVFishPrice2.setAdapter(Adapter2);
                                         mRVFishPrice2.setHasFixedSize(false);
@@ -744,15 +904,16 @@ public class Puckup extends AppCompatActivity {
                                             Float dd = Float.parseFloat(filterdata2.get(i).amt);
                                             sum += dd;
                                         }
-
                                         //  btmamt.setText("Sub Total = " +String.valueOf(sum));
-
-                                        s =  ((18.0/100) *sum)+sum;
-                                        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.valueOf(s)+"(Inc of all taxes)");
+                                        double s =  ((18.0/100) *sum)+sum;
+                                        btmtotal.setText("Total = " +getResources().getString(R.string.rupee)+String.format("%.2f",s)+"(Inc of all taxes)");
                                         Log.e("rererer", String.valueOf(s));
                                     } catch (NumberFormatException e) {
                                         Toast.makeText(context, "Enter only numbers", Toast.LENGTH_SHORT).show();
                                     }
+
+
+
                                 }
                             });
                     builder.show();
@@ -793,9 +954,7 @@ public class Puckup extends AppCompatActivity {
                 //  id= (TextView)itemView.findViewById(R.id.id);
             }
 
-
         }
-
 
 
     }
